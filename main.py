@@ -7,6 +7,7 @@ import uuid
 
 import spider.nhentai
 from book import Book
+import ua
 
 link = input("Please input comic link: ")
 
@@ -35,37 +36,38 @@ items = ''
 tocncx = ''
 
 for (index, image) in enumerate(data.images):
+    print('[' + str(index+1) + '/' + str(count) + '] Downloading images ' + image, end = '')
+    sys.stdout.flush()
+    header = { 'User-Agent': ua.getRandomUA() }
+    r = requests.get(image, cookies=data.cookies, headers=header)
+    if r.ok:
+        print(' [OK]')
 
-	print('[' + str(index+1) + '/' + str(count) + '] Downloading images ' + image, end = '')
-	sys.stdout.flush()
-	r = requests.get(image, cookies=data.cookies)
-	print(' [OK]')
+    	# download images
+        epub.writestr("OEBPS/Images/" + str(index+1) + "." + data.imagesType, r.content)
 
-	# download images
-	epub.writestr("OEBPS/Images/" + str(index+1) + "." + data.imagesType, r.content)
+    	# create xhtmls
+        epub.writestr("OEBPS/Text/Section_000" + str(index+1) + ".xhtml",
+    '''<?xml version="1.0" encoding="utf-8"?>
+    <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+      "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 
-	# create xhtmls
-	epub.writestr("OEBPS/Text/Section_000" + str(index+1) + ".xhtml",
-'''
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
-  "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+    <!--?xml version='1.0' encoding='utf-8'?--><html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+      <title></title>
+    </head>
 
-<!--?xml version='1.0' encoding='utf-8'?--><html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-  <title></title>
-</head>
+    <body>
+      <div><img src="../Images/%d.%s"/></div>
+    </body>
+    </html>
+    '''%(index+1, data.imagesType))
 
-<body>
-  <div><img src="../Images/%d.%s"/></div>
-</body>
-</html>
-'''%(index+1, data.imagesType))
-
-	items += '	<item href="Text/Section_000%d.xhtml" id="Text_Section_000%d.xhtml" media-type="application/xhtml+xml"/>\n'%(index+1, index+1)
-	items += '	<item href="Images/%d.%s" id="Images_%d.%s" media-type="image/%s"/>\n'%(index+1, data.imagesType, index+1, data.imagesType, data.imagesType)
-	tocncx += '	<itemref idref="Text_Section_000%d.xhtml"/>\n'%(index+1)
-
+        items += '	<item href="Text/Section_000%d.xhtml" id="Text_Section_000%d.xhtml" media-type="application/xhtml+xml"/>\n'%(index+1, index+1)
+        items += '	<item href="Images/%d.%s" id="Images_%d.%s" media-type="image/%s"/>\n'%(index+1, data.imagesType, index+1, data.imagesType, data.imagesType)
+        tocncx += '	<itemref idref="Text_Section_000%d.xhtml"/>\n'%(index+1)
+    else:
+        print(' [FAIL]')
 
 random = uuid.uuid1()
 # create content.opf

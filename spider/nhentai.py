@@ -3,12 +3,14 @@ import requests
 import re
 from bs4 import BeautifulSoup
 from book import Book
+import ua
 
 def getImagesLinks(url):
-    try:
-        book = Book()
+    book = Book()
 
-        r = requests.get(url)
+    header = { 'User-Agent': ua.getRandomUA() }
+    r = requests.get(url, headers=header)
+    if r.ok:
         book.cookie = r.cookies
         soup = BeautifulSoup(r.text, "html.parser")
 
@@ -30,6 +32,5 @@ def getImagesLinks(url):
             book.images.append("https://" + imagesBaseUrl + "/" + str(i+1) + "." + imagesType)
 
         return book
-    except urllib2.URLError as e:
-        print(e)
-        return Book()
+    else:
+        return None
