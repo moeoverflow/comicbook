@@ -8,4 +8,4 @@ def getRandomUA(uafile="user_agents.txt"):
                 uas.append(ua.strip()[1:-1-1])
     random.shuffle(uas)
 
-    return uas[random.randint(0, len(uas))]
+    return uas[random.randint(0, len(uas)-1)]

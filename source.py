@@ -1,8 +1,7 @@
 # coding: UTF-8
-class Book:
+class Source:
     title = ""
     subTitle = ""
     artist = ""
-    imagesType = ""
     images = []
     cookies = None

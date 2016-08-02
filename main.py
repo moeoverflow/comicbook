@@ -1,125 +1,88 @@
 # coding: UTF-8
 import sys
-import os.path
-import zipfile
+import getopt
 import requests
-import uuid
 
 import spider.nhentai
-from book import Book
+from source import Source
+from epub import EPUB
 import ua
+version = '1.0.0'
 
-link = input("Please input comic link: ")
+if __name__ != "__main__":
+    sys.exit()
 
-print('visit to nhentai.net')
-data = spider.nhentai.getImagesLinks(link)
+help = '''hentaibook options:
+  -h, --help       Show help.
+  -v, --version    Show version and exit.
+  -l, --link       a comic link on nhentai.net
+  -o, --output     Specify a output path.
+'''
 
-print('create .epub file.')
-print('%s.epub'%(data.title))
-epub = zipfile.ZipFile(data.title + '.epub', 'w')
+link = ""
+output = ""
 
-# create mimetype
-epub.writestr("mimetype", "application/epub+zip")
 
-# create container.xml
-epub.writestr("META-INF/container.xml",
-'''<?xml version="1.0" encoding="UTF-8"?>
-<container version="1.0" xmlns="urn:oasis:names:tc:opendocument:xmlns:container">
-    <rootfiles>
-        <rootfile full-path="OEBPS/content.opf" media-type="application/oebps-package+xml"/>
-   </rootfiles>
-</container>
-''')
+if len(sys.argv) == 1:
+	print(help)
+	sys.exit()
+argv = sys.argv[1:]
+try:
+	opts, args = getopt.getopt(argv,"hvl:o:",["help", "version", "link=", "output="])
+except getopt.GetoptError:
+	print(help)
+	sys.exit()
+for opt, arg in opts:
+	if opt in ("-h", "--help"):
+		print(help)
+		sys.exit()
+	if opt in ("-l", "--link"):
+		link = arg
+	if opt in ("-o", "--output"):
+		output = arg
+	if opt in ("-v", "--version"):
+		print(version)
+		sys.exit()
 
-count = len(data.images)
-items = ''
-tocncx = ''
 
-for (index, image) in enumerate(data.images):
-    print('[' + str(index+1) + '/' + str(count) + '] Downloading images ' + image, end = '')
+print('visit to nhentai.net...')
+source = spider.nhentai.getImagesLinks(link)
+if not source:
+    print('get comic resource failed.')
+    sys.exit()
+print(source.title)
+print('create .epub file to %s'%(output))
+if output == '':
+    output = './'
+if '.epub' in output:
+    epub = EPUB(output)
+else:
+    if output[-1:] != '/':
+        output += '/'
+    epub = EPUB('%s%s'%(output, source.title))
+
+
+print('start to download image resources:')
+count = len(source.images)
+for (index, image) in enumerate(source.images):
+    print('[%d/%d] %s '%(index+1, count, image), end = '')
     sys.stdout.flush()
     header = { 'User-Agent': ua.getRandomUA() }
-    r = requests.get(image, cookies=data.cookies, headers=header)
+    r = requests.get(image, cookies=source.cookies, headers=header)
     if r.ok:
-        print(' [OK]')
-
-    	# download images
-        epub.writestr("OEBPS/Images/" + str(index+1) + "." + data.imagesType, r.content)
-
-    	# create xhtmls
-        epub.writestr("OEBPS/Text/Section_000" + str(index+1) + ".xhtml",
-    '''<?xml version="1.0" encoding="utf-8"?>
-    <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
-      "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
-
-    <!--?xml version='1.0' encoding='utf-8'?--><html xmlns="http://www.w3.org/1999/xhtml">
-    <head>
-      <title></title>
-    </head>
-
-    <body>
-      <div><img src="../Images/%d.%s"/></div>
-    </body>
-    </html>
-    '''%(index+1, data.imagesType))
-
-        items += '	<item href="Text/Section_000%d.xhtml" id="Text_Section_000%d.xhtml" media-type="application/xhtml+xml"/>\n'%(index+1, index+1)
-        items += '	<item href="Images/%d.%s" id="Images_%d.%s" media-type="image/%s"/>\n'%(index+1, data.imagesType, index+1, data.imagesType, data.imagesType)
-        tocncx += '	<itemref idref="Text_Section_000%d.xhtml"/>\n'%(index+1)
+        print('[OK]')
+        imageName = image.split('/')[-1]
+        flag = (index == 0)
+        epub.addImage(imageName, r.content, cover=flag)
+        epub.addHTML('', '<div><img src="../Images/%s"/></div>'%(imageName))
     else:
-        print(' [FAIL]')
+        print('[FAIL]')
+print('download completed.')
+epub.title = source.title
+epub.author = source.artist
+epub.subject = '漫画'
+epub.source = link
 
-random = uuid.uuid1()
-# create content.opf
-epub.writestr("OEBPS/content.opf",
-'''<?xml version="1.0" encoding="utf-8"?>
-<package xmlns="http://www.idpf.org/2007/opf"
-            xmlns:dc="http://purl.org/dc/elements/1.1/"
-            unique-identifier="bookid" version="2.0">
-  <metadata>
-    <dc:title>%s</dc:title>
-	<dc:identifier id="bookid">%s</dc:identifier>
-	<meta name="cover" content="Images_1.%s" />
-  </metadata>
-  <manifest>
-%s
-	<item id="ncx" href="toc.ncx" media-type="application/x-dtbncx+xml"/>
-  </manifest>
-  <spine toc="ncx">
-%s
-  </spine>
-  <guide>
-    <reference href="cover.html" type="cover" title="Cover"/>
-  </guide>
-</package>
-'''%(data.title, random, data.imagesType, items, tocncx))
-
-# create toc.ncx
-epub.writestr("OEBPS/toc.ncx",
-'''<?xml version='1.0' encoding='utf-8'?>
-<!DOCTYPE ncx PUBLIC "-//NISO//DTD ncx 2005-1//EN"
-                 "http://www.daisy.org/z3986/2005/ncx-2005-1.dtd">
-<ncx xmlns="http://www.daisy.org/z3986/2005/ncx/" version="2005-1">
-  <head>
-    <meta name="dtb:uid" content="%s"/>
-    <meta name="dtb:depth" content="1"/>
-    <meta name="dtb:totalPageCount" content="0"/>
-    <meta name="dtb:maxPageNumber" content="0"/>
-  </head>
-  <docTitle>
-    <text>%s</text>
-  </docTitle>
-  <navMap>
-    <navPoint id="navPoint-1" playOrder="1">
-      <navLabel>
-        <text>Start</text>
-      </navLabel>
-      <content src="Text/Section0001.xhtml"/>
-    </navPoint>
-  </navMap>
-</ncx>
-'''%(random, data.title))
-
+print('epubify...')
+epub.close()
 print('work done.')
-
-epub.close

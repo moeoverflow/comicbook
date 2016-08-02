@@ -3,20 +3,19 @@ convert  comic on [nhentai.net](https://nhentai.net) to .epub e-book
 
 ## Install
 
-```Shell
-$ pip3 install requests
-$ pip3 install beautifulsoup4
+``` Shell
+$ pip install -r requirements.txt
 ```
 
-## Run
+## Usage
 
-```Shell
+``` Shell
 $ cd hentaibook
-$ python3 main.py
+$ python3 main.py -l https://nhentai.net/g/123170/
+
+$ python3 main.py --help
 ```
 
+## LICENSE
 
-
-## Environment
-
-Python3
+hentaibook is published under GPL 3.0 License. See the LICENSE file for more.
