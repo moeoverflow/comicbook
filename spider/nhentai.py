@@ -6,7 +6,7 @@ from source import Source
 import ua
 
 def getImagesLinks(url):
-    match = re.search(r'nhentai.net/g/\d+', url)
+    match = re.search(r'nhentai.net\/g\/\d+', url)
     if not match:
         print('not match')
         return None
@@ -15,8 +15,8 @@ def getImagesLinks(url):
 
     source = Source()
     header = { 'User-Agent': ua.getRandomUA() }
-    r = requests.get(url, headers=header)
-    if r.ok:
+    try:
+        r = requests.get(url, headers=header)
         source.cookie = r.cookies
         soup = BeautifulSoup(r.text, "html.parser")
 
@@ -33,7 +33,8 @@ def getImagesLinks(url):
             link = con.select('a img')[0].get('data-src')
             source.images.append(convertLinks(index, link))
         return source
-    else:
+    except ConnectionError as e:
+        print(e)
         return None
 def convertLinks(index, link):
     matchType = re.search(r'jpg|png$', link)

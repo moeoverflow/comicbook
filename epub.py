@@ -6,7 +6,14 @@ class EPUB():
     def __init__(self, filename):
         if '.epub' not in filename:
             filename += '.epub'
-        self.epub = zipfile.ZipFile(os.path.expanduser(filename), 'w')
+
+        fullFilename = os.path.expanduser(filename)
+        print(fullFilename)
+        path = os.path.split(fullFilename)[0]
+        print(path)
+        if not os.path.exists(path):
+            os.makedirs(path)
+        self.epub = zipfile.ZipFile(fullFilename, 'w')
 
     title = ""
     author = ""
