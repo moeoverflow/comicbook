@@ -43,12 +43,7 @@ $('#dl-button').click(function() {
                     $('i', dlButton).removeClass('checkmark green');
                 }, 2)
             } else {
-                $('i', dlButton).removeClass('download');
-                $('i', dlButton).addClass('checkmark');
-                window.location.href = '/comic/' + id;
-                setTimeout(function() {
-                    $('i', dlButton).addClass('download');
-                    $('i', dlButton).removeClass('checkmark');
+                
             }
         });
     }
