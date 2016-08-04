@@ -1,5 +1,5 @@
 # hentaibook
-convert  comic on [nhentai.net](https://nhentai.net) to .epub e-book
+convert  comic  to .epub e-book
 
 ## Install
 
@@ -11,8 +11,8 @@ $ pip install -r requirements.txt
 
 ``` Shell
 $ cd hentaibook
-$ python3 main.py -l https://nhentai.net/g/123170/
-
+$ python3 main.py --nhentai https://nhentai.net/g/{id}/
+$ python3 main.py --ehentai http://g.e-hentai.org/g/{gid}/{token}/
 $ python3 main.py --help
 ```
 
@@ -21,7 +21,7 @@ $ python3 main.py --help
 ```Shell
 $ cd hentaibook 
 $ pip install gunicorn
-$ gunicorn -w 4 -b 127.0.0.1:5000 webapp:app
+$ gunicorn -w 4 -b 127.0.0.1:5000 webapp:app --timeout 600
 ```
 
 ## LICENSE

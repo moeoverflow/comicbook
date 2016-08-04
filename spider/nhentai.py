@@ -5,7 +5,7 @@ from bs4 import BeautifulSoup
 from source import Source
 import ua
 
-def get_images_links(url):
+def get_comic(url):
     match = re.search(r'nhentai.net\/g\/\d+', url)
     if not match:
         print('not match')
@@ -17,7 +17,7 @@ def get_images_links(url):
     header = { 'User-Agent': ua.getRandomUA() }
     try:
         r = requests.get(url, headers=header)
-        source.cookie = r.cookies
+        source.cookies = r.cookies
         soup = BeautifulSoup(r.text, "html.parser")
 
         title = soup.select('#info h1')[0].string

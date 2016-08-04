@@ -4,14 +4,15 @@ import getopt
 import requests
 
 import spider.nhentai
+import spider.ehentai
 from source import Source
 from epub import EPUB
 import ua
-version = '1.0.0'
+version = '1.1.0'
 
-def general_book(link, output):
-    print('visit to nhentai.net...')
-    source = spider.nhentai.get_images_links(link)
+def create_comic(source, link, spider, output):
+    print('visit to %s...'%(source))
+    source = spider.get_comic(link)
     if not source:
         print('get comic resource failed.')
         return False
@@ -25,7 +26,6 @@ def general_book(link, output):
         if output[-1:] != '/':
             output += '/'
         epub = EPUB('%s%s'%(output, source.title))
-
 
     print('start to download image resources:')
     count = len(source.images)
@@ -54,36 +54,55 @@ def general_book(link, output):
     print('work done.')
     return True
 
+
+def nhentai_spider(link, output):
+    return create_comic('nhentai.net', link, spider.nhentai, output)
+def ehentai_spider(link, output):
+    return create_comic('e-hentai.org', link, spider.ehentai, output)
+
+
+CREATE_EPUB = {
+    'nhentai.net': nhentai_spider,
+    'e-hentai.org': ehentai_spider
+}
+
 if __name__ == "__main__":
 
     help = '''hentaibook options:
       -h, --help       Show help.
       -v, --version    Show version and exit.
-      -l, --link       a comic link on nhentai.net
+      -n, --nhentai    a comic link on nhentai.net
+      -e, --ehentai    a comic link on e-hentai.org
       -o, --output     Specify a output path.
     '''
 
     link = ""
     output = ""
+    source = ""
 
     if len(sys.argv) == 1:
-    	print(help)
-    	sys.exit()
+        print(help)
+        sys.exit()
     argv = sys.argv[1:]
     try:
-    	opts, args = getopt.getopt(argv,"hvl:o:",["help", "version", "link=", "output="])
+        opts, args = getopt.getopt(argv,"hve:n:o:",["help", "version", "ehentai=", "nhentai=", "output="])
     except getopt.GetoptError:
-    	print(help)
-    	sys.exit()
+        print(help)
+        sys.exit()
     for opt, arg in opts:
-    	if opt in ("-h", "--help"):
-    		print(help)
-    		sys.exit()
-    	if opt in ("-l", "--link"):
-    		link = arg
-    	if opt in ("-o", "--output"):
-    		output = arg
-    	if opt in ("-v", "--version"):
-    		print(version)
-    		sys.exit()
-    general_book(link, output)
+        if opt in ("-h", "--help"):
+            rint(help)
+            sys.exit()
+        if opt in ("-e", "--ehentai"):
+            link = arg
+            source = 'e-hentai.org'
+        if opt in ("-n", "--nhentai"):
+            link = arg
+            source = 'nhentai.net'
+        if opt in ("-o", "--output"):
+            output = arg
+        if opt in ("-v", "--version"):
+    	    print(version)
+    	    sys.exit()
+
+    CREATE_EPUB[source](link, output)

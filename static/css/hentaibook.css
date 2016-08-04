@@ -19,6 +19,7 @@ body {
 
 #content {
     margin: 100px auto auto 100px;
+    width: 340px;
 }
 
 #title {
@@ -42,6 +43,17 @@ body {
     left: 4px;
     color: gray;
     font-size: 13px;
+    width: 340px;
+}
+.ui.accordion .title:not(.ui) {
+    color: gray;
+}
+.ui.message p:first-child {
+    margin-bottom: 0;
+}
+.ui.message>.close.icon {
+    top: 1.38575em;
+    right: 1em;
 }
 
 #dl-button {
