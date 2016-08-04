@@ -6,6 +6,8 @@
     <link rel="shortcut icon" href="static/favicon.ico">
     <link rel="apple-touch-icon" href="static/favicon.ico">
     <meta name="viewport" content="width=device-width, user-scalable=no">
+    <meta mame="keywords" content="nhentai,hentai,comic,epub,moeoverflow">
+    <meta description="description" content="convert comic on nhentai.net to .epub e-book.">
     <!-- semantic -->
 
     <link rel="stylesheet" href="static/semantic/dist/semantic.min.css">
@@ -23,10 +25,10 @@
             convert comic on nhentai.net to .epub e-book.
         </div>
         <div class="ui form" id="comic-form" onsubmit="return false;">
-            <div class="field">
+            <div class="field" id="input-field">
                 <div class="ui action large input" id="input-box">
-                  <input type="text" id="comiclink" placeholder="nhentai.net/g/xxxxx/">
-                  <div class="ui orange disabled button" id="dl-button">
+                  <input type="url" id="comiclink" placeholder="nhentai.net/g/xxxxx/">
+                  <div class="ui orange button" id="dl-button">
                     <i class="download large icon"></i>
                   </div>
                 </div>

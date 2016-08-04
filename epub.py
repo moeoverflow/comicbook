@@ -3,40 +3,38 @@ import zipfile
 import uuid
 
 class EPUB():
-    def __init__(self, filename):
-        if '.epub' not in filename:
-            filename += '.epub'
+    def __init__(self, file_name):
+        if '.epub' not in file_name:
+            file_name += '.epub'
 
-        fullFilename = os.path.expanduser(filename)
-        print(fullFilename)
-        path = os.path.split(fullFilename)[0]
-        print(path)
+        full_file_name = os.path.expanduser(file_name)
+        path = os.path.split(full_file_name)[0]
         if not os.path.exists(path):
             os.makedirs(path)
-        self.epub = zipfile.ZipFile(fullFilename, 'w')
+        self.epub = zipfile.ZipFile(full_file_name, 'w')
 
     title = ""
     author = ""
     subject = ""
     source = ""
 
-    htmlCount = 0
+    html_count = 0
     manifest = ""
     spine = ""
     cover = ""
 
-    def addImage(self, filename, data, cover=False):
-        self.epub.writestr("OEBPS/Images/" + filename, data)
-        self.manifest += '	<item href="Images/%s" id="Images_%s" media-type="image/%s"/>\n'%(filename, filename, filename.split('.')[-1])
+    def addImage(self, file_name, data, cover=False):
+        self.epub.writestr("OEBPS/Images/" + file_name, data)
+        self.manifest += '	<item href="Images/%s" id="Images_%s" media-type="image/%s"/>\n'%(file_name, file_name, file_name.split('.')[-1])
         if cover:
-            self.cover = 'Images_' + filename
+            self.cover = 'Images_' + file_name
     def addHTML(self, title, content):
-        self.htmlCount += 1
-        self.epub.writestr("OEBPS/Text/Section_%04d.xhtml"%(self.htmlCount), xxx_xhtml.format(title=title, body=content))
-        self.manifest += '  <item href="Text/Section_%04d.xhtml" id="Text_Section_%04d.xhtml" media-type="application/xhtml+xml"/>\n'%(self.htmlCount, self.htmlCount)
-        self.spine += '  <itemref idref="Text_Section_%04d.xhtml"/>\n'%(self.htmlCount)
-    def setCover(self, filename):
-        self.cover = "Images_%s"%(filename)
+        self.html_count += 1
+        self.epub.writestr("OEBPS/Text/Section_%04d.xhtml"%(self.html_count), xxx_xhtml.format(title=title, body=content))
+        self.manifest += '  <item href="Text/Section_%04d.xhtml" id="Text_Section_%04d.xhtml" media-type="application/xhtml+xml"/>\n'%(self.html_count, self.html_count)
+        self.spine += '  <itemref idref="Text_Section_%04d.xhtml"/>\n'%(self.html_count)
+    def setCover(self, file_name):
+        self.cover = "Images_%s"%(file_name)
     def close(self):
         random = uuid.uuid1()
 

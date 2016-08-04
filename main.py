@@ -9,9 +9,9 @@ from epub import EPUB
 import ua
 version = '1.0.0'
 
-def generalBook(link, output):
+def general_book(link, output):
     print('visit to nhentai.net...')
-    source = spider.nhentai.getImagesLinks(link)
+    source = spider.nhentai.get_images_links(link)
     if not source:
         print('get comic resource failed.')
         return False
@@ -36,10 +36,10 @@ def generalBook(link, output):
         r = requests.get(image, cookies=source.cookies, headers=header)
         if r.ok:
             print('[OK]')
-            imageName = image.split('/')[-1]
+            image_name = image.split('/')[-1]
             flag = (index == 0)
-            epub.addImage(imageName, r.content, cover=flag)
-            epub.addHTML('', '<div><img src="../Images/%s"/></div>'%(imageName))
+            epub.addImage(image_name, r.content, cover=flag)
+            epub.addHTML('', '<div><img src="../Images/%s"/></div>'%(image_name))
         else:
             print('[FAIL]')
             return False
@@ -86,4 +86,4 @@ if __name__ == "__main__":
     	if opt in ("-v", "--version"):
     		print(version)
     		sys.exit()
-    generalBook(link, output)
+    general_book(link, output)

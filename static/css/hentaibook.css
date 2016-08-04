@@ -11,6 +11,12 @@ body {
     background-position: bottom right;
 }
 
+#comiclink:focus {
+    border-color: #CC7D60!important;
+    border-right-color: none;
+
+}
+
 #content {
     margin: 100px auto auto 100px;
 }
@@ -39,6 +45,7 @@ body {
 }
 
 #dl-button {
+    width: 54px;
     background-color: #b4451c;
 }
 

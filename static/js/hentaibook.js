@@ -1,24 +1,25 @@
-var comicForm = $('#comic-form')
-var dlButton = $('#dl-button')
+var comicForm = $('#comic-form');
+var dlButton = $('#dl-button');
+var link = $('#comiclink');
+
 comicForm.form({
-    on: 'change',
+    on: 'blur',
     fields: {
       	comiclink: {
 	        identifier  : 'comiclink',
 	        rules: [{
-	        	type   : 'empty',
-	            prompt : 'Please input link.'
-	        },{
 	        	type   : 'regExp[/(https://)?nhentai.net\/g\/[0-9]+(\/)?$/]',
 	            prompt : 'Please input correct link.'
 	        }]
       	}
     },
     onValid: function() {
-        dlButton.removeClass('disabled')
+
     },
     onInvalid: function() {
-        dlButton.addClass('disabled')
+        if (link.val() == '') {
+            $('#input-field').removeClass('error');
+        }
     }
 });
 comicForm.submit = function() {
@@ -27,23 +28,22 @@ comicForm.submit = function() {
 
 $('#dl-button').click(function() {
     if (comicForm.form('is valid')) {
-        var link = $('#comiclink').val();
-        var id = link.match(/[0-9]+/)[0];
+
+        var id = link.val().match(/[0-9]+/)[0];
+        console.log(id);
         dlButton.addClass('loading');
         $.get('/comic/download/' + id, function(result) {
             dlButton.removeClass('loading');
-            console.log(result);
-            console.log(result.status);
             if (result.status == 'success') {
                 $('i', dlButton).removeClass('download');
                 $('i', dlButton).addClass('checkmark green');
-                window.location.href = '/comic/' + id;
+                window.location = '/comic/' + id;
                 setTimeout(function() {
                     $('i', dlButton).addClass('download');
                     $('i', dlButton).removeClass('checkmark green');
                 }, 2)
             } else {
-                
+
             }
         });
     }
