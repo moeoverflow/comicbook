@@ -7,20 +7,24 @@ import main
 
 COMIC_URL = {
     'nhentai.net': 'https://nhentai.net/g/{params[id]}/',
-    'e-hentai.org': 'http://g.e-hentai.org/g/{params[gid]}/{params[token]}/'
+    'e-hentai.org': 'http://g.e-hentai.org/g/{params[gid]}/{params[token]}/',
+    'wnacg.org': 'http://www.wnacg.org/photos-index-aid-{params[aid]}.html'
 }
 COMIC_FILE_NAME = {
     'nhentai.net': 'nhentai-{params[id]}.epub',
-    'e-hentai.org': 'ehentai-{params[gid]}-{params[token]}.epub'
+    'e-hentai.org': 'ehentai-{params[gid]}-{params[token]}.epub',
+    'wnacg.org': 'wnacg-{params[aid]}.epub'
 }
 COMIC_MAIN_PATH = os.path.expanduser('./static/comic')
 COMIC_PATHS = {
     'nhentai.net': '%s/nhentai'%(COMIC_MAIN_PATH),
-    'e-hentai.org': '%s/ehentai'%(COMIC_MAIN_PATH)
+    'e-hentai.org': '%s/ehentai'%(COMIC_MAIN_PATH),
+    'wnacg.org': '%s/wnacg'%(COMIC_MAIN_PATH)
 }
 COMIC_DOWNLOADING_PATHS = {
     'nhentai.net': '%s/downloading'%(COMIC_PATHS['nhentai.net']),
-    'e-hentai.org': '%s/downloading'%(COMIC_PATHS['e-hentai.org'])
+    'e-hentai.org': '%s/downloading'%(COMIC_PATHS['e-hentai.org']),
+    'wnacg.org': '%s/downloading'%(COMIC_PATHS['wnacg.org']),
 }
 
 if not os.path.exists(COMIC_MAIN_PATH):
@@ -79,7 +83,7 @@ def index():
 
 @app.route('/comic/nhentai/download/<int:id>')
 def download_nhentai_comic(id):
-    return download_comic('nhentai.net', { "id": id })
+    return download_comic('nhentai.net', { "id": str(id) })
 @app.route('/comic/nhentai/check/<int:id>')
 def check_nhentai_comic(id):
     return check_comic('nhentai.net', { "id": str(id) })
@@ -90,6 +94,13 @@ def download_ehentai_comic(gid, token):
 @app.route('/comic/ehentai/check/<int:gid>/<token>')
 def check_ehentai_comic(gid, token):
     return check_comic('e-hentai.org', { 'gid': str(gid), 'token': token })
+
+@app.route('/comic/wnacg/download/<int:aid>')
+def download_wnacg_comic(aid):
+    return download_comic('wnacg.org', { "aid": str(aid) })
+@app.route('/comic/wnacg/check/<int:aid>')
+def check_wnacg_comic(aid):
+    return check_comic('wnacg.org', { "aid": str(aid) })
 
 @app.errorhandler(404)
 def page_not_found(error):

@@ -14,7 +14,7 @@ comicForm.form({
       	comiclink: {
 	        identifier  : 'comiclink',
 	        rules: [{
-	        	type   : 'regExp[/((https\:\/\/)?nhentai.net\/g\/[0-9]+(\/)?$)|((http\:\/\/)?g.e-hentai.org\/g\/[0-9]+\/[0-9a-z]+(\/)?$)/]',
+	        	type   : 'regExp[/((https\:\/\/)?nhentai\.net\/g\/[0-9]+(\/)?$)|((http\:\/\/)?g.e-hentai.org\/g\/[0-9]+\/[0-9a-z]+(\/)?$)|((http\:\/\/)?(www.)?wnacg.org\/photos-index-aid-[0-9]+.html$)/]',
 	            prompt : 'Please input correct link.'
 	        }]
       	}
@@ -38,7 +38,7 @@ $('#dl-button').click(function() {
         var downloadUrl = ''
         if (link.val().match(/nhentai\.net/)) {
             source = 'nhentai'
-            id = link.val().match(/[0-9]+/)[0];
+            var id = link.val().match(/[0-9]+/)[0];
             downloadUrl = '/comic/nhentai/download/' + id;
             dlButton.addClass('loading');
             $.get('/comic/nhentai/check/' + id, response);
@@ -50,6 +50,13 @@ $('#dl-button').click(function() {
             downloadUrl = '/comic/ehentai/download/' + gid + '/' + token;
             dlButton.addClass('loading');
             $.get('/comic/ehentai/check/' + gid + '/' + token, response);
+        } else if (link.val().match(/wnacg\.org/)) {
+            source = 'wnacg'
+            var aid = link.val().match(/[0-9]+/)[0];
+            downloadUrl = '/comic/wnacg/download/' + aid;
+            console.log(downloadUrl)
+            dlButton.addClass('loading');
+            $.get('/comic/wnacg/check/' + aid, response);
         }
     }
     function response(result) {

@@ -5,6 +5,7 @@ import requests
 
 import spider.nhentai
 import spider.ehentai
+import spider.wnacg
 from source import Source
 from epub import EPUB
 import ua
@@ -59,11 +60,13 @@ def nhentai_spider(link, output):
     return create_comic('nhentai.net', link, spider.nhentai, output)
 def ehentai_spider(link, output):
     return create_comic('e-hentai.org', link, spider.ehentai, output)
-
+def wnacg_spider(link, output):
+    return create_comic('wnacg.org', link, spider.wnacg, output)
 
 CREATE_EPUB = {
     'nhentai.net': nhentai_spider,
-    'e-hentai.org': ehentai_spider
+    'e-hentai.org': ehentai_spider,
+    'wnacg.org': wnacg_spider
 }
 
 if __name__ == "__main__":
@@ -73,6 +76,7 @@ if __name__ == "__main__":
       -v, --version    Show version and exit.
       -n, --nhentai    a comic link on nhentai.net
       -e, --ehentai    a comic link on e-hentai.org
+      -w, --wnacg      a comic link on wnacg.org
       -o, --output     Specify a output path.
     '''
 
@@ -85,7 +89,7 @@ if __name__ == "__main__":
         sys.exit()
     argv = sys.argv[1:]
     try:
-        opts, args = getopt.getopt(argv,"hve:n:o:",["help", "version", "ehentai=", "nhentai=", "output="])
+        opts, args = getopt.getopt(argv,"hve:n:w:o:",["help", "version", "ehentai=", "nhentai=", "wnacg=", "output="])
     except getopt.GetoptError:
         print(help)
         sys.exit()
@@ -99,6 +103,9 @@ if __name__ == "__main__":
         if opt in ("-n", "--nhentai"):
             link = arg
             source = 'nhentai.net'
+        if opt in ("-w", "--wnacg"):
+            link = arg
+            source = 'wnacg.org'
         if opt in ("-o", "--output"):
             output = arg
         if opt in ("-v", "--version"):
