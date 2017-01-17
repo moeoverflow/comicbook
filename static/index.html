@@ -15,7 +15,7 @@
     <script src="/static/semantic/dist/semantic.min.js"></script>
 
     <!-- custom -->
-    <link rel="stylesheet" type="text/css" href="/static/css/hentaibook.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/comicbook.css">
 </head>
 
 <body>
@@ -28,10 +28,16 @@
             <div class="field" id="input-field">
                 <div class="ui action large input" id="input-box">
                   <input type="url" id="comiclink" placeholder="nhentai.net/g/xxxxx/">
-                  <div class="ui orange button" id="dl-button">
+                  <div class="ui orange disabled button" id="dl-button">
                     <i class="download large icon"></i>
                   </div>
                 </div>
+            </div>
+            <div class="ui small olive indicating progress" id="progress">
+              <div class="bar">
+                <div class="progress"></div>
+              </div>
+              <div class="label">Generating...</div>
             </div>
             <div class="ui negative hidden message" id="message">
               <p>Mission failed. _(:зゝ∠)_</p>
@@ -68,5 +74,5 @@
     </div>
 
 </body>
-<script src="/static/js/hentaibook.js"></script>
+<script src="/static/js/comicbook.js"></script>
 </html>

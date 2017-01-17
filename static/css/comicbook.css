@@ -13,7 +13,7 @@ body {
 
 #comiclink:focus {
     border-color: #CC7D60!important;
-    border-right-color: none;
+    border-right-color: unset;
 
 }
 
