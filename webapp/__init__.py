@@ -1,10 +1,8 @@
-import os.path
-import time
-
 from flask import Flask, send_file , url_for, abort, jsonify
-from crawler import Crawler
+
 from config import DOMAIN
-from comic_storage import ComicStorage
+from crawler import Crawler
+from crawler.utils.storage import Storage
 
 COMIC_URLS = {
     DOMAIN.nhentai_net: 'https://nhentai.net/g/{params[id]}/',
@@ -19,8 +17,6 @@ DOWNLOAD_URL = {
 
 app = Flask(__name__)
 
-crawler = Crawler()
-
 
 def crawl_done(status, item):
     print("-----crawl done-----")
@@ -28,7 +24,7 @@ def crawl_done(status, item):
 
 
 def check_comic_status(domain, params):
-    storage = ComicStorage(domain, params['id'])
+    storage = Storage(domain, params['id'])
     if storage.check_comic():
         return jsonify({
             "code": 200,
@@ -37,7 +33,7 @@ def check_comic_status(domain, params):
         })
     else:
         url = COMIC_URLS[domain].format(params=params)
-        progress = crawler.crawl(url, crawl_done)
+        progress = Crawler.crawl(url, crawl_done)
         if progress:
             return jsonify({
                 "code": 202,
@@ -53,7 +49,7 @@ def check_comic_status(domain, params):
 
 
 def download_comic(domain, id):
-    storage = ComicStorage(domain, id)
+    storage = Storage(domain, id)
     return send_file(storage.get_comic_file_path(), mimetype='application/epub+zip')
 
 
@@ -105,4 +101,5 @@ def page_not_found(error):
 
 if __name__ == '__main__':
     app.debug = True
+
     app.run()

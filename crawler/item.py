@@ -1,6 +1,3 @@
-# coding: UTF-8
-from config import DOMAIN
-
 class Item:
     titles = None
     author = None

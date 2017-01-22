@@ -1,7 +1,7 @@
 # Custom
-static/images/*
-static/favicon.ico
-static/comic/*
+webapp/static/images/*
+webapp/static/favicon.ico
+webapp/static/comic/*
 test.py
 
 # Byte-compiled / optimized / DLL files

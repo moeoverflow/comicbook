@@ -2,7 +2,7 @@ import config
 import os
 
 
-class ComicStorage:
+class Storage:
 
     def __init__(self, domain, id):
         self.domain = domain

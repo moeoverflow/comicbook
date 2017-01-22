@@ -1,15 +1,13 @@
 # coding: UTF-8
-import requests
-import re
 import logging
-from requests.exceptions import ConnectionError
-import ua
+import re
+
+import requests
 from lxml import etree
+from requests.exceptions import ConnectionError
+
 import config
-
-from config import DOMAIN
-
-
+from crawler.utils import ua
 
 logger = logging.getLogger("spider")
 logger.setLevel(logging.INFO)
@@ -27,7 +25,7 @@ class NhentaiSpider:
             self.url = 'https://' + self.url
 
         session = requests.Session()
-        session.headers.update({'User-Agent': ua.getRandomUA()})
+        session.headers.update({'User-Agent': ua.get_random_ua()})
         session.proxies.update(config.PROXY)
 
         try:

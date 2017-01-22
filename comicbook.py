@@ -3,7 +3,20 @@ import sys
 import getopt
 
 from crawler import Crawler
+import webapp
 
+
+def crawl_done(status, item):
+    print(status)
+    if item:
+        print(item.titles[0])
+        for url in item.image_urls:
+            print(url)
+
+
+def crawl():
+    crawler = Crawler()
+    crawler.crawl(link, crawl_done)
 
 version = '1.1.0'
 
@@ -26,28 +39,20 @@ if __name__ == "__main__":
         sys.exit()
     argv = sys.argv[1:]
     try:
-        opts, args = getopt.getopt(argv,"hve:n:w:o:",["help", "version", "ehentai=", "nhentai=", "wnacg=", "output="])
+        opts, args = getopt.getopt(argv,"hvc:o:w",["help", "version", "comic=", "output=", "webapp"])
     except getopt.GetoptError:
         print(help)
         sys.exit()
     for opt, arg in opts:
         if opt in ("-h", "--help"):
             print(help)
-            sys.exit()
         if opt in ("-c", "--comic"):
             link = arg
+            crawl()
         if opt in ("-o", "--output"):
             output = arg
         if opt in ("-v", "--version"):
             print(version)
-            sys.exit()
-
-    def crawl_done(status, item):
-        print(status)
-        if item:
-            print(item.titles[0])
-            for url in item.image_urls:
-                print(url)
-
-    crawler = Crawler()
-    crawler.crawl(link, crawl_done)
+        if opt in ("-w", "--webapp"):
+            webapp.app.debug = True
+            webapp.app.run()

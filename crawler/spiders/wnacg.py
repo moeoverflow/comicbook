@@ -1,13 +1,13 @@
 # coding: UTF-8
-import requests
 import re
-from bs4 import BeautifulSoup
-from item import Item
-import ua
-from requests.exceptions import ConnectionError
-import config
 
-from lxml import etree
+import requests
+from bs4 import BeautifulSoup
+from requests.exceptions import ConnectionError
+
+import config
+from crawler.utils import ua
+
 
 class WnacgSpider:
 
@@ -21,7 +21,7 @@ class WnacgSpider:
             return None
 
         session = requests.Session()
-        session.headers.update({'User-Agent': ua.getRandomUA()})
+        session.headers.update({'User-Agent': ua.get_random_ua()})
         session.proxies.update(config.PROXY)
         try:
             r = session.get(self.url)

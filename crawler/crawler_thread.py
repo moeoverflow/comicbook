@@ -1,15 +1,12 @@
-import threading
-import time
 import os
+import threading
 
-from spiders.nhentai_spider import NhentaiSpider
-from spiders.ehentai_spider import EhentaiSpider
-from spiders.wnacg_spider import WnacgSpider
-
-from pipelines.comic_pipeline import ComicPipeline
 from config import DOMAIN
-from comic_storage import ComicStorage
-
+from crawler.pipelines.comic_epub import ComicPipeline
+from crawler.spiders.ehentai import EhentaiSpider
+from crawler.spiders.nhentai import NhentaiSpider
+from crawler.spiders.wnacg import WnacgSpider
+from crawler.utils.storage import Storage
 
 SPIDERS = {
     DOMAIN.nhentai_net: NhentaiSpider,
@@ -26,7 +23,7 @@ class CrawlerThread(threading.Thread):
         self.name = name
         self.item = item
         self.url = url
-        self.storage = ComicStorage(item.domain, item.id)
+        self.storage = Storage(item.domain, item.id)
 
     def run(self):
         spider = SPIDERS[self.item.domain](self.url)

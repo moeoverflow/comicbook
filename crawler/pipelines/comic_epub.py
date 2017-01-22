@@ -1,8 +1,10 @@
-from epub import EPUB
-import ua
 import sys
 import requests
+
+from crawler.utils.epub import EPUB
+from crawler.utils import ua
 import config
+
 
 class ComicPipeline():
     def __init__(self, item):
@@ -16,7 +18,7 @@ class ComicPipeline():
         thread.progress = 1 / (count + 1)
 
         session = requests.Session()
-        session.headers.update({'User-Agent': ua.getRandomUA()})
+        session.headers.update({'User-Agent': ua.get_random_ua()})
         session.proxies.update(config.PROXY)
 
         for (index, url) in enumerate(self.item.image_urls):

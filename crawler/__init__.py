@@ -1,12 +1,10 @@
-import re
 import logging
+import re
 import threading
-from crawler_thread import CrawlerThread
+
 from config import DOMAIN
-import config
-import os
-import glob
-from item import Item
+from crawler.crawler_thread import CrawlerThread
+from crawler.item import Item
 
 logger = logging.getLogger("crawler")
 logger.setLevel(logging.INFO)
@@ -14,7 +12,8 @@ logger.setLevel(logging.INFO)
 
 class Crawler:
 
-    def crawl(self, url, callback):
+    @classmethod
+    def crawl(cls, url, callback):
         item = parse_url(url)
         if not item:
             callback("error", None)
@@ -29,11 +28,8 @@ class Crawler:
             thread = CrawlerThread(name=thread_name, item=item, url=url)
             callback("started", None)
             if thread:
-                thread.callback = self.crawl_done
+                thread.callback = callback
                 thread.start()
-
-    def crawl_done(self, item):
-        print("crawl_done: "+ item.domain.value + "@" + item.id)
 
 
 def parse_url(url):

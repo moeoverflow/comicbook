@@ -1,6 +1,8 @@
 import random
+import os
 
-def getRandomUA(uafile="user_agents.txt"):
+
+def get_random_ua(uafile=os.path.dirname(os.path.abspath(__file__))+"/user_agents.txt"):
     uas = []
     with open(uafile, 'r') as uaf:
         for ua in uaf.readlines():

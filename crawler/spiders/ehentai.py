@@ -1,11 +1,13 @@
 # coding: UTF-8
-import requests
 import re
-import ua
+
+import requests
 from bs4 import BeautifulSoup
 from requests.exceptions import ConnectionError
+
 import config
-from lxml import etree
+from crawler.utils import ua
+
 
 class EhentaiSpider:
 
@@ -26,7 +28,7 @@ class EhentaiSpider:
         token = data[-1]
 
         session = requests.Session()
-        session.headers.update({'User-Agent': ua.getRandomUA(),
+        session.headers.update({'User-Agent': ua.get_random_ua(),
                                 'Referer': 'http://e-hentai.org/',
                                 'Host': 'g.e-hentai.org'
                                 })
