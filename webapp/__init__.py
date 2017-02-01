@@ -1,4 +1,4 @@
-from flask import Flask, send_file , url_for, abort, jsonify
+from flask import Flask, send_file, url_for, abort, jsonify
 
 from config import DOMAIN
 from crawler import Crawler
@@ -15,7 +15,7 @@ DOWNLOAD_URL = {
     DOMAIN.wnacg_com: '/comic/download/wnacg/{params[id]}'
 }
 
-app = Flask(__name__)
+app = Flask(__name__, static_url_path='/webapp/static')
 
 
 def crawl_done(status, item):
@@ -98,6 +98,7 @@ def page_not_found(error):
     url_for('static', filename='static/404.html')
     url_for('static', filename='static/images/404.png')
     return send_file('static/404.html'), 404
+
 
 if __name__ == '__main__':
     app.debug = True

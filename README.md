@@ -11,10 +11,10 @@ $ pip install -r requirements.txt
 
 ``` Shell
 $ cd hentaibook
-$ python3 main.py --nhentai https://nhentai.net/g/{id}/
-$ python3 main.py --ehentai http://g.e-hentai.org/g/{gid}/{token}/
-$ python3 main.py --wnacg http://wnacg.org/photos-view-id-{aid}.html
-$ python3 main.py --help
+$ python3 comicbook.py --nhentai https://nhentai.net/g/{id}/
+$ python3 comicbook.py --ehentai http://g.e-hentai.org/g/{gid}/{token}/
+$ python3 comicbook.py --wnacg http://wnacg.org/photos-view-id-{aid}.html
+$ python3 comicbook.py --help
 ```
 
 ## Webapp

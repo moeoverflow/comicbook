@@ -1,3 +1,5 @@
+# coding: UTF-8
+
 import sys
 import requests
 
@@ -27,7 +29,7 @@ class ComicPipeline():
 
             r = session.get(url)
             if r.ok:
-                thread.progress = (index+1+1) / (count+1)
+                thread.progress = (index + 1 + 1) / (count + 1)
                 print('[OK]')
                 image_name = url.split('/')[-1]
                 flag = (index == 0)
@@ -39,7 +41,8 @@ class ComicPipeline():
         print('download completed.')
         self.epub.title = self.item.titles[0]
         self.epub.author = self.item.author
-        self.epub.subject = '漫画'
+        self.epub.subject = self.item.tags
+        self.epub.language = self.item.language
         self.epub.source = self.item.source
 
         print('epubify...')
