@@ -12,6 +12,7 @@ from crawler.utils import ua
 logger = logging.getLogger("spider")
 logger.setLevel(logging.INFO)
 
+
 class NhentaiSpider:
     def __init__(self, url):
         self.url = url
@@ -29,7 +30,7 @@ class NhentaiSpider:
         session.proxies.update(config.PROXY)
 
         try:
-            logger.info("fetching "+self.url)
+            logger.info("fetching " + self.url)
             r = session.get(self.url)
             item.cookies = r.cookies
 
@@ -41,6 +42,7 @@ class NhentaiSpider:
             item.author = selector.xpath('//*[@id="tags"]/div[4]/span/a/text()')
 
             item.tags = selector.xpath('//*[@id="tags"]/div[3]/span/a/text()')
+            item.language = selector.xpath('//*[@id="tags"]/div[6]/span/a/text()')
             item.image_urls = selector.xpath('//*[@id="thumbnail-container"]/div/a/img/@data-src')
             item.image_urls = list(map(convert_url, item.image_urls))
             item.source = self.url

@@ -2,7 +2,11 @@ import os.path
 import zipfile
 import uuid
 
+from jinja2 import Environment
+
+
 class EPUB():
+
     def __init__(self, file_name):
         if '.epub' not in file_name:
             file_name += '.epub'
@@ -15,8 +19,9 @@ class EPUB():
 
     title = ""
     author = ""
-    subject = ""
     source = ""
+    subject = set()
+    language = set()
 
     html_count = 0
     manifest = ""
@@ -25,25 +30,30 @@ class EPUB():
 
     def addImage(self, file_name, data, cover=False):
         self.epub.writestr("OEBPS/Images/" + file_name, data)
-        self.manifest += '	<item href="Images/%s" id="Images_%s" media-type="image/%s"/>\n'%(file_name, file_name, file_name.split('.')[-1])
+        self.manifest += '	<item href="Images/%s" id="Images_%s" media-type="image/%s"/>\n' % (file_name, file_name, file_name.split('.')[-1])
         if cover:
             self.cover = 'Images_' + file_name
+
     def addHTML(self, title, content):
         self.html_count += 1
-        self.epub.writestr("OEBPS/Text/Section_%04d.xhtml"%(self.html_count), xxx_xhtml.format(title=title, body=content))
-        self.manifest += '  <item href="Text/Section_%04d.xhtml" id="Text_Section_%04d.xhtml" media-type="application/xhtml+xml"/>\n'%(self.html_count, self.html_count)
-        self.spine += '  <itemref idref="Text_Section_%04d.xhtml"/>\n'%(self.html_count)
+        self.epub.writestr("OEBPS/Text/Section_%04d.xhtml" % (self.html_count), xxx_xhtml.format(title=title, body=content))
+        self.manifest += '  <item href="Text/Section_%04d.xhtml" id="Text_Section_%04d.xhtml" media-type="application/xhtml+xml"/>\n' % (self.html_count, self.html_count)
+        self.spine += '  <itemref idref="Text_Section_%04d.xhtml"/>\n' % (self.html_count)
+
     def setCover(self, file_name):
-        self.cover = "Images_%s"%(file_name)
+        self.cover = "Images_%s" % (file_name)
+
     def close(self):
         random = uuid.uuid1()
 
         self.epub.writestr("mimetype", "application/epub+zip")
         self.epub.writestr("META-INF/container.xml", container_xml)
-        self.epub.writestr("OEBPS/content.opf", content_opf.format(
+
+        self.epub.writestr("OEBPS/content.opf", Environment().from_string(content_opf).render(
             title=self.title,
             author=self.author,
             subject=self.subject,
+            language=self.language,
             identifier=random,
             cover=self.cover,
             manifest=self.manifest,
@@ -51,7 +61,6 @@ class EPUB():
             source=self.source))
         self.epub.writestr("OEBPS/toc.ncx", toc_ncx.format(uid=random, title=self.title))
         self.epub.close()
-
 
 
 container_xml = '''<?xml version="1.0" encoding="UTF-8"?>
@@ -80,21 +89,26 @@ xxx_xhtml = '''<?xml version="1.0" encoding="utf-8"?>
 content_opf = '''<?xml version="1.0" encoding="utf-8"?>
 <package xmlns="http://www.idpf.org/2007/opf" xmlns:dc="http://purl.org/dc/elements/1.1/" unique-identifier="bookid" version="2.0">
   <metadata>
-    <dc:title>{title}</dc:title>
-    <dc:creator>{author}</dc:creator>
-    <dc:subject>{subject}</dc:subject>
-	<dc:identifier id="bookid">{identifier}</dc:identifier>
-    <dc:source>{source}</dc:source>
+    <dc:title>{{ title }}</dc:title>
+    <dc:creator>{{ author }}</dc:creator>
+    {% for sub in subject %}
+    <dc:subject>{{ sub }}</dc:subject>
+    {% endfor %}
+    <dc:identifier id="bookid">{{ identifier }}</dc:identifier>
+    <dc:source>{{ source }}</dc:source>
+    {% for la in language %}
+    <dc:language>{{ la }}</dc:language>
+    {% endfor %}
     <dc:rights>created by hentaibook https://github.com/MoeOverflow/hentaibook</dc:rights>
     <dc:builder>hentaibook</dc:builder>
-	<meta name="cover" content="{cover}" />
+    <meta name="cover" content="{{ cover }}" />
   </metadata>
   <manifest>
-{manifest}
+{{ manifest }}
     <item id="ncx" href="toc.ncx" media-type="application/x-dtbncx+xml"/>
   </manifest>
   <spine toc="ncx">
-{spine}
+{{ spine }}
   </spine>
   <guide>
     <reference href="cover.html" type="cover" title="Cover"/>
