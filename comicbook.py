@@ -1,4 +1,5 @@
 # coding: UTF-8
+
 import sys
 import getopt
 
@@ -17,6 +18,7 @@ def crawl_done(status, item):
 def crawl():
     crawler = Crawler()
     crawler.crawl(link, crawl_done)
+
 
 version = '1.1.0'
 
@@ -39,7 +41,7 @@ if __name__ == "__main__":
         sys.exit()
     argv = sys.argv[1:]
     try:
-        opts, args = getopt.getopt(argv,"hvc:o:w",["help", "version", "comic=", "output=", "webapp"])
+        opts, args = getopt.getopt(argv, "hvc:o:w", ["help", "version", "comic=", "output=", "webapp"])
     except getopt.GetoptError:
         print(help)
         sys.exit()
