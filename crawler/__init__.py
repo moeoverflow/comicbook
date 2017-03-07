@@ -42,7 +42,7 @@ def parse_url(url):
     if match:
         item.id = match.group(1)
         item.domain = DOMAIN.wnacg_com
-    match = re.search(r'g\.e-hentai\.org/g/(\d+)/(\w+)', url)
+    match = re.search(r'e-hentai\.org/g/(\d+)/(\w+)', url)
     if match:
         item.id = match.group(1)
         item.domain = DOMAIN.ehentai_org

@@ -15,12 +15,12 @@ class EhentaiSpider:
         self.url = url
 
     def crawl(self, item, thread):
-        match = re.search(r'g.e-hentai.org\/g\/\d+\/\w+', self.url)
+        match = re.search(r'e-hentai.org\/g\/\d+\/\w+', self.url)
         if not match:
             print('not match')
             return None
-        if 'http' not in self.url:
-            self.url = 'http://' + self.url
+        if 'https' not in self.url:
+            self.url = 'https://' + self.url
         if self.url[-1] == '/':
             url = self.url[:-1]
         data = match.group().split('/')
@@ -29,15 +29,14 @@ class EhentaiSpider:
 
         session = requests.Session()
         session.headers.update({'User-Agent': ua.get_random_ua(),
-                                'Referer': 'http://e-hentai.org/',
-                                'Host': 'g.e-hentai.org'
-                                })
+                                'Referer': 'https://e-hentai.org/',
+                                'Host': 'e-hentai.org',
+                                'authority': 'e-hentai.org'})
         session.proxies.update(config.PROXY)
 
         try:
             r = session.get(url)
             soup = BeautifulSoup(r.text, "html.parser")
-
             en_title = soup.select('#gn')[0].string
             jp_title = soup.select('#gj')[0].string
             item.titles = []

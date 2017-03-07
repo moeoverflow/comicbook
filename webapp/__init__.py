@@ -6,13 +6,13 @@ from crawler.utils.storage import Storage
 
 COMIC_URLS = {
     DOMAIN.nhentai_net: 'https://nhentai.net/g/{params[id]}/',
-    DOMAIN.ehentai_org: 'http://g.e-hentai.org/g/{params[id]}/{params[token]}/',
+    DOMAIN.ehentai_org: 'https://e-hentai.org/g/{params[id]}/{params[token]}/',
     DOMAIN.wnacg_com: 'http://www.wnacg.com/photos-index-aid-{params[id]}.html'
 }
 DOWNLOAD_URL = {
-    DOMAIN.nhentai_net: '/comic/download/nhentai/{params[id]}',
-    DOMAIN.ehentai_org: '/comic/download/ehentai/{params[id]}',
-    DOMAIN.wnacg_com: '/comic/download/wnacg/{params[id]}'
+    DOMAIN.nhentai_net: '/comic/download/nhentai-{params[id]}.epub',
+    DOMAIN.ehentai_org: '/comic/download/ehentai-{params[id]}.epub',
+    DOMAIN.wnacg_com: '/comic/download/wnacg-{params[id]}.epub'
 }
 
 app = Flask(__name__, static_url_path='/webapp/static')
@@ -78,17 +78,17 @@ def check_wnacg_comic(aid):
     return check_comic_status(DOMAIN.wnacg_com, {"id": str(aid)})
 
 
-@app.route('/comic/download/nhentai/<int:id>')
+@app.route('/comic/download/nhentai-<int:id>.epub')
 def download_comic_nhentai(id):
     return download_comic(DOMAIN.nhentai_net, id)
 
 
-@app.route('/comic/download/ehentai/<int:gid>')
+@app.route('/comic/download/ehentai-<int:gid>.epub')
 def download_comic_ehentai(gid):
     return download_comic(DOMAIN.ehentai_org, gid)
 
 
-@app.route('/comic/download/wnacg/<int:aid>')
+@app.route('/comic/download/wnacg-<int:aid>.epub')
 def download_comic_wnacg(aid):
     return download_comic(DOMAIN.wnacg_org, str(aid))
 
