@@ -17,7 +17,7 @@ var regex = 'regExp[/\
 |\
 ((http\:\/\/)?e-hentai.org\/g\/[0-9]+\/[0-9a-z]+(\/)?$)\
 |\
-((http\:\/\/)?(www.)?wnacg.org\/photos-index-aid-[0-9]+.html$)\
+((http\:\/\/)?(www.)?wnacg.com\/photos-index-aid-[0-9]+.html$)\
 /]'
 
 

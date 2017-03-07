@@ -90,7 +90,7 @@ def download_comic_ehentai(gid):
 
 @app.route('/comic/download/wnacg-<int:aid>.epub')
 def download_comic_wnacg(aid):
-    return download_comic(DOMAIN.wnacg_org, str(aid))
+    return download_comic(DOMAIN.wnacg_com, str(aid))
 
 
 @app.errorhandler(404)
