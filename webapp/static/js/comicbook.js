@@ -85,8 +85,11 @@ $('#dl-button').prop('disabled', true);
 $('#dl-button').click(function() {
     if (comicForm.form('is valid') && canDownload) {
         window.location = downloadUrl;
+        $('#social-share').show();
     }
 });
+
+$('#social-share').hide();
 
 $('#progress').progress({
     percent: 0
@@ -130,3 +133,14 @@ function getStatus() {
         }
     });
 }
+
+var socialShareTitle = '我通过 Comicbook 下载了 epub 漫画本子，你也试一下吧 o(*////▽////*)q';
+socialShare('#social-share', {
+    title               : 'Just downloaded a Dōjinshi epub comic from Comicbook.',
+    sites               : ['twitter', 'facebook', 'weibo','qzone'],
+    origin              : 'moeoverflow',
+    weiboTitle          : socialShareTitle + ' @moeoverflow',
+    qzoneTitle          : 'Moeoverflow | Comicbook',
+    qzoneDescription    : socialShareTitle,
+    qqTitle             : socialShareTitle
+ });

@@ -1,0 +1,12 @@
+{% from "partials/head.html" import head with context %}
+{% from "partials/scripts.html" import scripts with context %}
+<!DOCTYPE html>
+<head>
+    {{ head() }}
+</head>
+<body>
+    {% block body %}
+    {% endblock %}
+</body>
+{{ scripts() }}
+</html>

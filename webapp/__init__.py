@@ -1,4 +1,7 @@
 from flask import Flask, send_file, url_for, abort, jsonify
+from jinja2 import Environment, PackageLoader, Template
+
+env = Environment(loader=PackageLoader('comicbook', 'webapp/templates'))
 
 from config import DOMAIN
 from crawler import Crawler
@@ -55,13 +58,8 @@ def download_comic(domain, id):
 
 @app.route('/')
 def index():
-    url_for('static', filename='css/comicbook.css')
-    url_for('static', filename='images/background.jpg')
-    url_for('static', filename='favicon.ico')
-    url_for('static', filename='semantic/dist/semantic.min.css')
-    url_for('static', filename='semantic/dist/semantic.min.js')
-    return send_file('static/index.html')
-
+    template = env.get_template('index.html')
+    return template.render()
 
 @app.route('/comic/nhentai/<int:id>')
 def check_comic_nhentai_status(id):
@@ -97,7 +95,9 @@ def download_comic_wnacg(aid):
 def page_not_found(error):
     url_for('static', filename='static/404.html')
     url_for('static', filename='static/images/404.png')
-    return send_file('static/404.html'), 404
+
+    template = env.get_template('404.html')
+    return template.render(), 404
 
 
 if __name__ == '__main__':

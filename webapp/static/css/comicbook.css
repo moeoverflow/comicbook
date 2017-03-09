@@ -14,31 +14,34 @@ body {
 #comiclink:focus {
     border-color: #CC7D60!important;
     border-right-color: unset;
-
 }
 
-#content {
+.content-wrapper {
     margin: 100px auto auto 100px;
     width: 340px;
 }
 
-#title {
+.title {
     color: #b4451c;
 }
-#title h1 {
+.title h1 {
     font-size: 46px;
 }
-#description {
+.description {
     font-size: 20px;
     width: 415px;
     color: gray;
 }
 
-#input-box {
+#comic-form {
+    margin-top: 2em;
+}
+
+.input-box {
     width: 340px;
     margin: 20px 0 4px 0;
 }
-#hint {
+.hint {
     position: relative;
     left: 4px;
     color: gray;
@@ -61,12 +64,12 @@ body {
     background-color: #b4451c;
 }
 
-#bg-source {
+.footer.bg-source {
     position: fixed;
     bottom: 4px;
     right: 4px;
 }
-#copyright {
+.footer.copyright {
     position: fixed;
     bottom: 4px;
     left: 4px;
@@ -74,36 +77,36 @@ body {
 .footer {
     color: gray;
 }
-.footer a {
+footer a {
     text-decoration: none;
     color: gray;
 }
-#min-footer {
+.min-footer {
     display: none;
 }
 
 @media screen and (max-width: 518px) {
-#content {
+.content-wrapper {
     margin: 120px auto 0 auto;
     width: 90%;
     text-align: center;
 }
-#title h1 {
+.title h1 {
     font-size: 42px;
 }
-#description {
+.description {
     font-size: 17px;
     width: initial;
 }
 
-#hint {
+.hint {
     left: 0;
 }
 
-#footer {
+.footer {
     display: none;
 }
-#min-footer {
+.min-footer {
     font-size: 10px;
     display: block;
     position: relative;

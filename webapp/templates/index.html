@@ -1,0 +1,54 @@
+{% from "partials/header.html" import header with context %}
+{% from "partials/footer.html" import footer with context %}
+
+{% extends "layout.html" %}
+
+{% block body %}
+  <div class="content-wrapper">
+    {{ header() }}
+
+    <div class="ui form" id="comic-form" onsubmit="return false;">
+        <div class="field" id="input-field">
+            <div class="ui action large input" id="input-box">
+              <input type="url" id="comiclink" placeholder="nhentai.net/g/xxxxx/">
+              <div class="ui orange disabled button" id="dl-button">
+                <i class="download large icon"></i>
+              </div>
+            </div>
+        </div>
+        <div class="ui small olive indicating progress" id="progress">
+          <div class="bar">
+            <div class="progress"></div>
+          </div>
+          <div class="label">Generating...</div>
+        </div>
+        <div class="ui negative hidden message" id="message">
+          <p>Mission failed. _(:зゝ∠)_</p>
+          <i class="close tiny icon"></i>
+        </div>
+        <div id="social-share"></div>
+    </div>
+    <div class="ui accordion hint">
+      <div class="title">
+        <i class="dropdown icon"></i>
+        How to use?
+      </div>
+      <div class="content">
+        <p> nhentai.net: <strong>nhentai.net/g/{id}/</strong> </p>
+        <p> e-hentai.org: <strong>g.e-hentai.org/g/{gid}/{token}/</strong> </p>
+        <p> wnacg.org: <strong>www.wnacg.org/photos-view-id-{aid}.html</strong> </p>
+      </div>
+      <div class="title">
+        <i class="dropdown icon"></i>
+        How much time is needed?
+      </div>
+      <div class="content">
+        <p class="transition hidden">
+          This process may last 1~5 minutes.
+        </p>
+      </div>
+    </div>
+    </div>
+
+    {{ footer() }}
+{% endblock %}

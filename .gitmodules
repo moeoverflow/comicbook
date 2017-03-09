@@ -1,0 +1,3 @@
+[submodule "webapp/static/share.js"]
+	path = webapp/static/share.js
+	url = https://github.com/overtrue/share.js.git

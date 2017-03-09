@@ -1,0 +1,11 @@
+{% from "partials/header.html" import header with context %}
+{% from "partials/footer.html" import footer with context %}
+
+{% extends "layout.html" %}
+
+{% block body %}
+  <footer class="content-wrapper">
+    {{ header() }}
+    <div class="details">404 Not Found</div>
+    {{ footer() }}
+{% endblock %}
