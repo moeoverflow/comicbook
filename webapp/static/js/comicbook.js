@@ -97,7 +97,7 @@ $('#progress').progress({
 $('#progress').hide();
 
 
-var socket = io('ws://127.0.0.1:5000');
+var socket = io(window.location.hostname + ':' + window.location.port);
 
 setInterval(getStatus, 3000);
 
