@@ -9,8 +9,8 @@ var dlButton = $('#dl-button');
 var link = $('#comiclink');
 
 var downloadUrl = '';
-var statusUrl = '';
 var canDownload = false;
+var data = undefined;
 
 var regex = 'regExp[/\
 ((https\:\/\/)?nhentai\.net\/g\/[0-9]+(\/)?$)\
@@ -35,7 +35,7 @@ comicForm.form({
     onValid: function() {
         if (link.val() == '') {
             console.log("kong");
-            $('#dl-button').addClass('disabled');
+            dlButton.addClass('disabled');
             $('#progress').hide();
             canDownload = false
             return;
@@ -44,24 +44,24 @@ comicForm.form({
 
 
         if (link.val().match(/nhentai\.net/)) {
-            var id = link.val().match(/[0-9]+/)[0];
-
-            statusUrl = '/comic/nhentai/' + id;
-            downloadUrl = '/comic/download/nhentai-' + id + '.epub';
+            data = {
+                type: 'nhentai',
+                id: link.val().match(/[0-9]+/)[0]
+            }
         } else if (link.val().match(/e-hentai\.org/)) {
-            source = 'ehentai'
-            var data = link.val().match(/[0-9]+\/[0-9a-z]+/)[0].split('/');
-            var gid = data[0];
-            var token = data[1];
-
-            statusUrl = '/comic/ehentai/' + gid + '/' + token;
-            downloadUrl = '/comic/download/ehentai-' + gid + '.epub';
+            var value = link.val().match(/[0-9]+\/[0-9a-z]+/)[0].split('/');
+            data = {
+                type: 'ehentai',
+                id: value[0],
+                token: value[1]
+            }
         } else if (link.val().match(/wnacg\.com/)) {
-            source = 'wnacg'
-            var aid = link.val().match(/[0-9]+/)[0];
-
-            statusUrl = '/comic/wnacg/' + aid;
-            downloadUrl = '/comic/download/wnacg-' + aid + '.epub';
+            data = {
+                type: 'wnacg',
+                id: link.val().match(/[0-9]+/)[0]
+            }
+        } else {
+            data = undefined;
         }
         canDownload = true
         $('#progress').show()
@@ -69,7 +69,7 @@ comicForm.form({
     },
     onInvalid: function() {
         console.log("on invalid")
-        $('#dl-button').addClass('disabled')
+        dlButton.addClass('disabled')
 
         if (link.val() == '') {
             $('#input-field').removeClass('error');
@@ -81,11 +81,11 @@ comicForm.submit = function() {
     return false;
 };
 
-$('#dl-button').prop('disabled', true);
-$('#dl-button').click(function() {
+dlButton.prop('disabled', true);
+dlButton.click(function() {
     if (comicForm.form('is valid') && canDownload) {
-        window.location = downloadUrl;
         $('#social-share').show();
+        window.location = downloadUrl;
     }
 });
 
@@ -96,26 +96,27 @@ $('#progress').progress({
 });
 $('#progress').hide();
 
-setInterval(getStatus, 5000);
+
+var socket = io('ws://127.0.0.1:5000');
+
+setInterval(getStatus, 3000);
 
 function getStatus() {
-    if (statusUrl == '') {
+    if (data == undefined) {
         return
     }
-
-    $.get(statusUrl, function (response) {
-        canDownload = false;
+    socket.emit('check-status', data, function (response) {
         if (response.status == 'ready') {
-            $('#dl-button').removeClass('disabled')
+            dlButton.removeClass('disabled')
             $('#progress').progress({
                 percent: 100,
                 text: {
                     success : 'You can download it.'
                 }
             });
-            canDownload = true;
+            downloadUrl = response.url;
         } else if (response.status == 'generating') {
-            $('#dl-button').addClass('disabled')
+            dlButton.addClass('disabled')
             $('#progress').progress({
                 percent: parseInt(response.progress * 100),
                 text: {
@@ -123,7 +124,7 @@ function getStatus() {
                 }
             });
         } else if (response.status == 'started') {
-            $('#dl-button').addClass('disabled')
+            dlButton.addClass('disabled')
             $('#progress').progress({
                 percent: 0,
                 text: {

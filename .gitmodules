@@ -1,3 +1,6 @@
 [submodule "webapp/static/share.js"]
 	path = webapp/static/share.js
 	url = https://github.com/overtrue/share.js.git
+[submodule "webapp/static/socket.io-client"]
+	path = webapp/static/socket.io-client
+	url = https://github.com/socketio/socket.io-client.git
