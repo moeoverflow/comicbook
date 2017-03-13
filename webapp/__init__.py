@@ -23,7 +23,7 @@ DOWNLOAD_URL = {
 }
 
 
-def crawl_done(status, item):
+def crawl_done(status, item=None):
     print("-----crawl done-----")
     print(status)
 

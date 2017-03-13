@@ -7,7 +7,7 @@ from crawler import Crawler
 import webapp
 
 
-def crawl_done(status, item):
+def crawl_done(status, item=None):
     print(status)
     if item:
         print(item.titles[0])

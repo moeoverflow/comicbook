@@ -16,7 +16,7 @@ class Crawler:
     def crawl(cls, url, callback):
         item = parse_url(url)
         if not item:
-            callback("error", None)
+            callback("error")
             return None
 
         thread_name = "CrawlerThread." + item.domain.value + "@" + item.id
@@ -26,7 +26,7 @@ class Crawler:
             return thread.progress
         else:
             thread = CrawlerThread(name=thread_name, item=item, url=url)
-            callback("started", None)
+            callback("started")
             if thread:
                 thread.callback = callback
                 thread.start()

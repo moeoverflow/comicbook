@@ -36,9 +36,10 @@ class NhentaiSpider:
 
             selector = etree.HTML(r.text)
 
-            jp_title = selector.xpath('//*[@id="info"]/h2/text()')[0]
-            en_title = selector.xpath('//*[@id="info"]/h1/text()')[0]
-            item.titles = [jp_title, en_title]
+            en_title = selector.xpath('//*[@id="info"]/h1/text()')
+            sub_title = selector.xpath('//*[@id="info"]/h2/text()')
+            item.titles = sub_title + en_title
+
             item.author = selector.xpath('//*[@id="tags"]/div[4]/span/a/text()')
 
             item.tags = selector.xpath('//*[@id="tags"]/div[3]/span/a/text()')
