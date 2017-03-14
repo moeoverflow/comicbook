@@ -20,10 +20,18 @@ $ python3 comicbook.py --help
 ## Webapp
 
 ```Shell
-$ cd hentaibook 
+# gunicorn and eventlet
 $ pip3 install gunicorn
-$ gunicorn -w 1 --threads 12 -b 127.0.0.1:5000 webapp:app
+$ pip3 install eventlet
+$ gunicorn --worker-class eventlet -w 1 --threads 12 -b 127.0.0.1:5000 webapp:app
+# or
+$ python3 comicbook.py --server
+
+# run server and bot.
+$ python3 comicbook.py --server --telegram-bot
 ```
+
+
 
 ## LICENSE
 

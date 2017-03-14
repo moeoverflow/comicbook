@@ -20,3 +20,6 @@ class Storage:
 
     def get_comic_file_path(self):
         return "%s/%s" % (config.COMIC_PATHS[self.domain], self.get_comic_file_name())
+
+    def get_comic_public_download_url(self):
+        return config.DOWNLOAD_URL[self.domain].format(params={'id': self.id})

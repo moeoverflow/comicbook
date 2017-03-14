@@ -37,4 +37,3 @@ class CrawlerThread(threading.Thread):
         dl_dir = self.storage.get_comic_file_downloading_path()
         dir = self.storage.get_comic_file_path()
         os.rename(dl_dir, dir)
-        self.callback('crawler done', item)

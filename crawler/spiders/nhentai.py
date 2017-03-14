@@ -39,8 +39,7 @@ class NhentaiSpider:
             en_title = selector.xpath('//*[@id="info"]/h1/text()')
             sub_title = selector.xpath('//*[@id="info"]/h2/text()')
             item.titles = sub_title + en_title
-
-            item.author = selector.xpath('//*[@id="tags"]/div[4]/span/a/text()')
+            item.author = selector.xpath('//*[@id="tags"]/div[4]/span[1]/a/text()')
 
             item.tags = selector.xpath('//*[@id="tags"]/div[3]/span/a/text()')
             item.language = selector.xpath('//*[@id="tags"]/div[6]/span/a/text()')

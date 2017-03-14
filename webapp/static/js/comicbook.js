@@ -8,9 +8,7 @@ var comicForm = $('#comic-form');
 var dlButton = $('#dl-button');
 var link = $('#comiclink');
 
-var downloadUrl = '';
-var canDownload = false;
-var data = undefined;
+var isValid = false;
 
 var regex = 'regExp[/\
 ((https\:\/\/)?nhentai\.net\/g\/[0-9]+(\/)?$)\
@@ -19,7 +17,6 @@ var regex = 'regExp[/\
 |\
 ((http\:\/\/)?(www.)?wnacg.com\/photos-index-aid-[0-9]+.html$)\
 /]'
-
 
 comicForm.form({
     on: 'blur',
@@ -33,57 +30,32 @@ comicForm.form({
       	}
     },
     onValid: function() {
+        isValid = true;
         if (link.val() == '') {
-            console.log("kong");
             dlButton.addClass('disabled');
             $('#progress').hide();
-            canDownload = false
-            return;
-        }
-
-
-
-        if (link.val().match(/nhentai\.net/)) {
-            data = {
-                type: 'nhentai',
-                id: link.val().match(/[0-9]+/)[0]
-            }
-        } else if (link.val().match(/e-hentai\.org/)) {
-            var value = link.val().match(/[0-9]+\/[0-9a-z]+/)[0].split('/');
-            data = {
-                type: 'ehentai',
-                id: value[0],
-                token: value[1]
-            }
-        } else if (link.val().match(/wnacg\.com/)) {
-            data = {
-                type: 'wnacg',
-                id: link.val().match(/[0-9]+/)[0]
-            }
         } else {
-            data = undefined;
+            $('#progress').show()
+            getStatus();
         }
-        canDownload = true
-        $('#progress').show()
-        getStatus();
     },
     onInvalid: function() {
-        console.log("on invalid")
+        isValid = false;
         dlButton.addClass('disabled')
-
         if (link.val() == '') {
             $('#input-field').removeClass('error');
         }
         $('#progress').hide()
     }
 });
+
 comicForm.submit = function() {
     return false;
 };
 
 dlButton.prop('disabled', true);
 dlButton.click(function() {
-    if (comicForm.form('is valid') && canDownload) {
+    if (comicForm.form('is valid')) {
         $('#social-share').show();
         window.location = downloadUrl;
     }
@@ -102,10 +74,11 @@ var socket = io(window.location.hostname + ':' + window.location.port);
 setInterval(getStatus, 3000);
 
 function getStatus() {
-    if (data == undefined) {
-        return
-    }
-    socket.emit('check-status', data, function (response) {
+    if (!isValid) { return; }
+
+    socket.emit('check-status', {
+        url: link.val()
+    }, function (response) {
         if (response.status == 'ready') {
             dlButton.removeClass('disabled')
             $('#progress').progress({

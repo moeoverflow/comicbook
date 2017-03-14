@@ -3,6 +3,7 @@ webapp/static/images/*
 webapp/static/favicon.ico
 webapp/static/comic/*
 test.py
+config.py
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

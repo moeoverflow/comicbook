@@ -3,34 +3,26 @@
 import sys
 import getopt
 
-from crawler import Crawler
+from crawler.__init__ import Crawler
+
+import config
 import webapp
-
-
-def crawl_done(status, item=None):
-    print(status)
-    if item:
-        print(item.titles[0])
-        for url in item.image_urls:
-            print(url)
-
-
-def crawl():
-    crawler = Crawler()
-    crawler.crawl(link, crawl_done)
+from bot import ComicbookTelegramBot
 
 
 version = '1.1.0'
 
 if __name__ == "__main__":
 
-    help = '''hentaibook options:
-      -h, --help       Show help.
-      -v, --version    Show version and exit.
-      -c, --comic       a comic link on > nhentai.net
-                                        > e-hentai.org
-                                        > wnacg.org
-      -o, --output     Specify a output path.(temporarily disabled)
+    help = '''comicbook options:
+      -h, --help            Show help.
+      -v, --version         Show version and exit.
+      -c, --comic           a comic link on > nhentai.net
+                                            > e-hentai.org
+                                            > wnacg.org
+      -o, --output          Specify a output path.(temporarily disabled)
+      -s, --server          Run flask web server.
+      -t, --telegram-bot    Run telegram bot.
     '''
 
     link = ""
@@ -41,7 +33,7 @@ if __name__ == "__main__":
         sys.exit()
     argv = sys.argv[1:]
     try:
-        opts, args = getopt.getopt(argv, "hvc:o:w", ["help", "version", "comic=", "output=", "webapp"])
+        opts, args = getopt.getopt(argv, "hvc:o:ts", ["help", "version", "comic=", "output=", "telegram-bot", "server"])
     except getopt.GetoptError:
         print(help)
         sys.exit()
@@ -50,11 +42,17 @@ if __name__ == "__main__":
             print(help)
         if opt in ("-c", "--comic"):
             link = arg
-            crawl()
+            Crawler.crawl(link)
         if opt in ("-o", "--output"):
             output = arg
         if opt in ("-v", "--version"):
             print(version)
-        if opt in ("-w", "--webapp"):
-            webapp.app.debug = True
-            webapp.app.run()
+
+    if ("-t", "") in opts or ("--telegram-bot", "") in opts:
+        bot = ComicbookTelegramBot(config.TELEGRAM_BOT_TOKEN)
+        bot.start()
+
+    if ("-s", "") in opts or ("--server", "") in opts:
+        webapp.app.debug = config.DEBUG
+        webapp.socketio.run(webapp.app)
+
