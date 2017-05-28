@@ -46,7 +46,9 @@ class Item:
 
     @author.setter
     def author(self, a):
-        if isinstance(a, list):
+        if not a:
+            self._author = ""
+        elif isinstance(a, list):
             # only use first author as creator
             self._author = a[0].strip()
         elif isinstance(a, str):
