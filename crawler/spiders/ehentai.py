@@ -51,23 +51,30 @@ class EhentaiSpider:
                 elif container.select('td')[0].string == 'character:':
                     pass
 
-            thumb_images_container = soup.select('#gdt div[class="gdtm"]')
-            total_images_count = len(thumb_images_container)
-
+            nav_container = soup.select('div.gtb table.ptt tr td')
+            page_num = len(nav_container) - 2
 
             item.image_urls = []
-            for container in thumb_images_container:
-                images_page_url = container.select('div a')[0].get('href')
-                r_images_page = session.get(images_page_url)
 
-                soup_images_page = BeautifulSoup(r_images_page.text, "html.parser")
-                imgs = soup_images_page.select('.sni a img')
+            for page_index in range(page_num):
+                page_r = session.get(url, params={'p': page_index})
+                page_soup = BeautifulSoup(page_r.text, 'html.parser')
 
-                for img in imgs:
-                    if re.search(r'/h/', img['src']):
-                        item.image_urls.append(img['src'])
-                        thread.progress = 0.15 * (len(item.image_urls) / total_images_count)
-                        print(img['src'])
+                thumb_images_container = page_soup.select('#gdt div[class="gdtm"]')
+                total_images_count = len(thumb_images_container)
+
+                for container in thumb_images_container:
+                    images_page_url = container.select('div a')[0].get('href')
+                    r_images_page = session.get(images_page_url)
+
+                    soup_images_page = BeautifulSoup(r_images_page.text, "html.parser")
+                    imgs = soup_images_page.select('.sni a img')
+
+                    for img in imgs:
+                        if re.search(r'/h/', img['src']):
+                            item.image_urls.append(img['src'])
+                            thread.progress = 0.15 * (len(item.image_urls) / total_images_count)
+                            print(img['src'])
 
             return item
         except ConnectionError as e:
