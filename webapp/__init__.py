@@ -6,6 +6,14 @@ import config
 from crawler import Crawler
 from crawler.utils.storage import Storage
 
+import sentry_sdk
+from sentry_sdk.integrations.flask import FlaskIntegration
+
+sentry_sdk.init(
+    dsn=config.SENTRY_DSN,
+    integrations=[FlaskIntegration()]
+)
+
 env = Environment(loader=PackageLoader('comicbook', 'webapp/templates'))
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secret!'
