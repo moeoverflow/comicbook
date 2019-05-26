@@ -5,6 +5,7 @@ certifi==2018.11.29
 cffi==1.11.5
 chardet==3.0.4
 Click==7.0
+comicepub==0.1.2
 cryptography==2.4.2
 dnspython==1.16.0
 eventlet==0.24.1
