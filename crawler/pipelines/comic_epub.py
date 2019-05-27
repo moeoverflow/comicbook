@@ -1,19 +1,22 @@
 # coding: UTF-8
-
+import os
 import sys
 import requests
+from comicepub import ComicEpub
 
-from crawler.utils.epub import EPUB
 from crawler.utils import ua
+
+
 import config
 
 
 class ComicPipeline():
     def __init__(self, item):
         self.item = item
+        self.epub = None
 
     def generate(self, dir, thread, callback=None):
-        self.epub = EPUB(dir)
+        self.epub = ComicEpub(dir)
 
         print('start to download image resources:')
         count = len(self.item.image_urls)
@@ -32,21 +35,21 @@ class ComicPipeline():
                 thread.progress = (index + 1 + 1) / (count + 1)
                 print('[OK]')
                 image_name = url.split('/')[-1]
-                flag = (index == 0)
-                self.epub.addImage(image_name, r.content, cover=flag)
-                self.epub.addHTML('', '<div><img src="../Images/%s"/></div>' % (image_name))
+                is_cover = (index == 0)
+
+                name, ext = os.path.splitext(image_name)
+                self.epub.add_comic_page(r.content, ext, is_cover)
             else:
                 print('[FAIL]')
                 return False
         print('download completed.')
-        self.epub.title = self.item.titles[0]
-        self.epub.author = self.item.author
-        self.epub.subject = self.item.tags
+        self.epub.title = (self.item.titles[0], self.item.titles[0])
+        self.epub.authors = [(self.item.author, self.item.author)]
+        self.epub.publisher = ('Comicbook', 'Comicbook')
         self.epub.language = self.item.language
-        self.epub.source = self.item.source
 
         print('epubify...')
-        self.epub.close()
+        self.epub.save()
         print('work done.')
 
         if callback:
