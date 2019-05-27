@@ -3,16 +3,17 @@ LANGUAGES = ('chinese', 'english', 'japanese')
 
 class Item:
 
-    titles = None
-    image_urls = None
-    source = None
-    domain = None
-    id = None
-    dir = None
+    def __init__(self):
+        self.titles = None
+        self.image_urls = None
+        self.source = None
+        self.domain = None
+        self.id = None
+        self.dir = None
 
-    _tags = set()
-    _language = set()
-    _author = ''
+        self._tags = set()
+        self._language = set()
+        self._author = ''
 
     @property
     def tags(self):
