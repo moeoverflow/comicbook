@@ -7,6 +7,7 @@ from crawler.spiders.ehentai import EhentaiSpider
 from crawler.spiders.nhentai import NhentaiSpider
 from crawler.spiders.wnacg import WnacgSpider
 from crawler.utils.storage import Storage
+from db.mongodb import comicbook_calibre
 
 SPIDERS = {
     DOMAIN.nhentai_net: NhentaiSpider,
@@ -37,3 +38,9 @@ class CrawlerThread(threading.Thread):
         dl_dir = self.storage.get_comic_file_downloading_path()
         dir = self.storage.get_comic_file_path()
         os.rename(dl_dir, dir)
+        comicbook_calibre.insert_one({
+            'storeInCalibre': False,
+            'domain': item.domain.value,
+            'id': item.id,
+            'filepath': os.path.join(item.domain.value, self.storage.get_comic_file_name()),
+        })
