@@ -14,6 +14,10 @@ PROXY = {
     # 'https': 'socks5://127.0.0.1:1080'
 }
 
+CALIBRE_LIBRARY_PATH = ''
+
+MONGODB_URL = 'mongodb://localhost:27017/'
+
 
 class DOMAIN(Enum):
     nhentai_net = "nhentai.net"

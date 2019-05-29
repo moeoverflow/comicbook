@@ -1,3 +1,4 @@
+import glob
 from flask import Flask, send_file
 from flask_socketio import SocketIO
 from jinja2 import Environment, PackageLoader
@@ -5,6 +6,7 @@ from jinja2 import Environment, PackageLoader
 import config
 from crawler import Crawler
 from crawler.utils.storage import Storage
+from db.mongodb import comicbook_calibre
 
 import sentry_sdk
 from sentry_sdk.integrations.flask import FlaskIntegration
@@ -32,8 +34,14 @@ def which_type(type):
 
 
 def comic_file(domain, id):
-    storage = Storage(domain, id)
-    return send_file(storage.get_comic_file_path(), mimetype='application/epub+zip')
+    result = comicbook_calibre.find_one({ 'domain': domain.value, 'id': id })
+    if result is not None:
+        if result['storeInCalibre']:
+            return send_file(Storage.get_calibre_epub_file(result['filepath']), mimetype='application/epub+zip')
+        else:
+            return send_file(Storage.get_comicbook_epub_file(result['filepath']), mimetype='application/epub+zip')
+    else:
+        return 404
 
 
 @app.route('/')
@@ -49,7 +57,7 @@ def handle_json(json):
 
 @app.route('/comic/download/<type>-<int:id>.epub')
 def download_comic(type, id):
-    return comic_file(which_type(type), id)
+    return comic_file(which_type(type), str(id))
 
 
 @app.errorhandler(404)
