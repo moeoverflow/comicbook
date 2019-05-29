@@ -54,7 +54,7 @@ class NhentaiSpider:
 
 
 def convert_url(url):
-    match_type = re.search(r'jpg|png$', url)
+    match_type = re.search(r'jpg|png|gif$', url)
     type = match_type.group()
     match_url = re.search(r'\.nhentai\.net/galleries/(\d+)/(\d+)', url)
     id = match_url.group(1)
