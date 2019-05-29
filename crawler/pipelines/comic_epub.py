@@ -44,6 +44,7 @@ class ComicPipeline():
                 return False
         print('download completed.')
         self.epub.title = (self.item.titles[0], self.item.titles[0])
+        self.epub.subjects = list(self.item.tags)
         self.epub.authors = [(self.item.author, self.item.author)]
         self.epub.publisher = ('Comicbook', 'Comicbook')
         self.epub.language = self.item.language
