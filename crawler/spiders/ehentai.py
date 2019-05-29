@@ -37,16 +37,21 @@ class EhentaiSpider:
         try:
             r = session.get(url)
             soup = BeautifulSoup(r.text, "html.parser")
-            en_title = soup.select('#gn')
-            jp_title = soup.select('#gj')
-            item.titles = jp_title + en_title
+            en_title = soup.select('#gn')[0].string
+            jp_title = soup.select('#gj')[0].string
+            item.titles = []
+            if jp_title != "":
+                item.titles.append(jp_title)
+            item.titles.append(en_title)
+            tags_container = soup.select('#taglist table tr')
 
-            tags_container = soup.select('#taglist table tbody tr')
             for container in tags_container:
                 if container.select('td')[0].string == 'artist:':
-                    item.author = container.select('td')[1].select('div a').string
-                elif container.select('td')[0].string == 'character:':
-                    pass
+                    item.author = container.select('td')[1].select('div a')[0].string
+                elif container.select('td')[0].string == 'female:' or container.select('td')[0].string == 'male:':
+                    tags = container.select('td')[1].select('div a')
+                    for tag in tags:
+                        item.tags.add(tag.string)
 
             nav_container = soup.select('div.gtb table.ptt tr td')
             page_num = len(nav_container) - 2
