@@ -37,12 +37,9 @@ class EhentaiSpider:
         try:
             r = session.get(url)
             soup = BeautifulSoup(r.text, "html.parser")
-            en_title = soup.select('#gn')[0].string
-            jp_title = soup.select('#gj')[0].string
-            item.titles = []
-            if jp_title != "":
-                item.titles.append(jp_title)
-            item.titles.append(en_title)
+            en_title = soup.select('#gn')
+            jp_title = soup.select('#gj')
+            item.titles = jp_title + en_title
 
             tags_container = soup.select('#taglist table tbody tr')
             for container in tags_container:

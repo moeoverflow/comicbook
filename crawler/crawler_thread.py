@@ -29,6 +29,9 @@ class CrawlerThread(threading.Thread):
     def run(self):
         spider = SPIDERS[self.item.domain](self.url)
         self.item = spider.crawl(item=self.item, thread=self)
+        if self.item is None:
+            return
+
         self.progress = 0.05
         pipeline = ComicPipeline(self.item)
         dir = self.storage.get_comic_file_downloading_path()
