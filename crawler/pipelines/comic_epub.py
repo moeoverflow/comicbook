@@ -5,7 +5,7 @@ import requests
 from comicepub import ComicEpub
 
 from crawler.utils import ua
-
+from crawler.utils.language_code import get_language_code
 
 import config
 
@@ -47,7 +47,19 @@ class ComicPipeline():
         self.epub.subjects = list(self.item.tags)
         self.epub.authors = [(self.item.author, self.item.author)]
         self.epub.publisher = ('Comicbook', 'Comicbook')
-        self.epub.language = self.item.language
+
+        if len(self.item.language) > 0:
+            for language in self.item.language:
+                if language is 'translated':
+                    continue
+                self.epub.language = get_language_code(language)
+        else:
+            if len(self.item.titles) > 0 and (
+                    '漢化' in self.item.titles[0] or
+                    '汉化' in self.item.titles[0] or
+                    '翻譯' in self.item.titles[0]
+            ):
+                self.epub.language = 'zh'
 
         print('epubify...')
         self.epub.save()

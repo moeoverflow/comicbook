@@ -43,15 +43,18 @@ class EhentaiSpider:
             if jp_title != "":
                 item.titles.append(jp_title)
             item.titles.append(en_title)
-            tags_container = soup.select('#taglist table tr')
 
-            for container in tags_container:
+            info_container = soup.select('#taglist table tr')
+
+            for container in info_container:
                 if container.select('td')[0].string == 'artist:':
                     item.author = container.select('td')[1].select('div a')[0].string
                 elif container.select('td')[0].string == 'female:' or container.select('td')[0].string == 'male:':
                     tags = container.select('td')[1].select('div a')
                     for tag in tags:
                         item.tags.add(tag.string)
+                elif container.select('td')[0].string == 'language:':
+                    item.language = set(map(lambda lng: lng.string, container.select('td')[1].select('div a')))
 
             nav_container = soup.select('div.gtb table.ptt tr td')
             page_num = len(nav_container) - 2
@@ -76,7 +79,6 @@ class EhentaiSpider:
                         if re.search(r'/h/', img['src']):
                             item.image_urls.append(img['src'])
                             thread.progress = 0.15 * (len(item.image_urls) / total_images_count)
-                            print(img['src'])
 
             return item
         except ConnectionError as e:
