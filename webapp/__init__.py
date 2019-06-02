@@ -28,7 +28,7 @@ def which_type(type):
     elif type == 'ehentai':
         return config.DOMAIN.ehentai_org
     elif type == 'wnacg':
-        return config.DOMAIN.wnacg_com
+        return config.DOMAIN.wnacg_org
     else:
         return None
 

@@ -12,7 +12,7 @@ from db.mongodb import comicbook_calibre
 SPIDERS = {
     DOMAIN.nhentai_net: NhentaiSpider,
     DOMAIN.ehentai_org: EhentaiSpider,
-    DOMAIN.wnacg_com: WnacgSpider
+    DOMAIN.wnacg_org: WnacgSpider
 }
 
 
