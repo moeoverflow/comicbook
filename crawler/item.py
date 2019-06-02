@@ -1,4 +1,4 @@
-LANGUAGES = ('chinese', 'english', 'japanese')
+LANGUAGES = ('chinese', 'english', 'japanese', 'korean')
 
 
 class Item:
@@ -33,7 +33,7 @@ class Item:
 
     @language.setter
     def language(self, l):
-        if isinstance(l, list):
+        if isinstance(l, list) or isinstance(l, set):
             for la in l:
                 if la.strip() in LANGUAGES:
                     self._language.add(la.strip())
