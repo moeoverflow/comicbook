@@ -1,9 +1,8 @@
 # coding: UTF-8
-import re
-
+import os
 import requests
-from bs4 import BeautifulSoup
 from requests.exceptions import ConnectionError
+from lxml import etree
 
 import config
 from crawler.utils import ua
@@ -15,44 +14,39 @@ class WnacgSpider:
         self.url = url
 
     def crawl(self, item, thread):
-        match = re.search(r'www.wnacg.com/photos-index-aid-\d+.html', self.url)
-        if not match:
-            print('not match')
-            return None
-
         session = requests.Session()
         session.headers.update({'User-Agent': ua.get_random_ua()})
         session.proxies.update(config.PROXY)
         try:
             r = session.get(self.url)
-            soup = BeautifulSoup(r.text, "html.parser")
+            selector = etree.HTML(r.text)
 
-            item.titles = [soup.select('.userwrap h2')[0].string]
+            title = selector.xpath('//*[@id="bodywrap"]/h2/text()')[0]
 
-            item.image_urls = []
-            item.image_urls += get_image_url(item, soup)
+            pages = []
+            img_urls = []
+            page = selector.xpath('//*[@id="bodywrap"]/div[2]/div/ul/li[1]/div[1]/a')[0].get('href')
+            pages.append(get_full_url(page))
+            while len(pages) == 1 or (len(pages) > 1 and pages[0] != pages[len(pages)-1]):
+                current_page = pages[len(pages)-1]
+                p = session.get(current_page)
+                sel = etree.HTML(p.text)
+                img_url = sel.xpath('//*[@id="picarea"]')[0].get('src')
+                img_urls.append(img_url)
 
-            page = int(soup.select('.f_left.paginator a')[-2].string)
+                next_page = sel.xpath('/html/body/div[8]/div/div/a[2]')[0].get('href')
+                pages.append(get_full_url(next_page))
 
-            total_images_count = int(page) * len(soup.select('.li.gallary_item'))
-            for i in range(2, page + 1):
-                index_url = "http://www.wnacg.org/photos-index-page-%d-aid-%s.html" % (i, item.id)
-                r = session.get(index_url)
-                soup = BeautifulSoup(r.text, "html.parser")
-                item.image_urls += get_image_url(item, soup)
-                thread.progress = 0.10 * (len(item.image_urls) / total_images_count)
+            item.titles = [title]
+            item.author = 'Unknown Author'
+            item.tags = []
+            item.image_urls = list(map(lambda url: 'https:' + url, img_urls))
+            thread.progress = 0.05
             return item
         except ConnectionError as e:
             print(e)
             return None
 
-def get_image_url(item, soup):
-    urls = []
-    container = soup.select('.li.gallary_item')
-    for (index, con) in enumerate(container):
-        url = con.select('.pic_box a img')[0]['src']
-        thumb_name = url.split('/')[-1].split('.')[0]
-        name = con.select('.info .title .name')[0].string
-        url = url.replace('/t/', '/').replace(thumb_name, name)
-        urls.append("http://www.wnacg.com"+url)
-    return urls
+
+def get_full_url(uri):
+    return 'https://www.wnacg.org' + uri
