@@ -1,11 +1,17 @@
 # coding: UTF-8
-import os
+import re
+import logging
+
 import requests
 from requests.exceptions import ConnectionError
 from lxml import etree
 
+
 import config
 from crawler.utils import ua
+
+logger = logging.getLogger("spider_wnacg")
+logger.setLevel(logging.INFO)
 
 
 class WnacgSpider:
@@ -14,6 +20,13 @@ class WnacgSpider:
         self.url = url
 
     def crawl(self, item, thread):
+        match = re.search(r'wnacg\.org', self.url)
+        if not match:
+            logger.info(" url not match")
+            return None
+        if 'http' not in self.url:
+            self.url = 'https://' + self.url
+
         session = requests.Session()
         session.headers.update({'User-Agent': ua.get_random_ua()})
         session.proxies.update(config.PROXY)
