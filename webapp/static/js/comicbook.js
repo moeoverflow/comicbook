@@ -41,7 +41,7 @@ comicForm.form({
     },
     onInvalid: function() {
         isValid = false;
-        dlButton.addClass('disabled')
+        dlButton.addClass('disabled');
         if (link.val() == '') {
             $('#input-field').removeClass('error');
         }
@@ -77,7 +77,8 @@ function getStatus() {
     if (!isValid) { return; }
 
     socket.emit('check-status', {
-        url: link.val()
+        url: link.val(),
+        start: true
     }, function (response) {
         if (response.status == 'ready') {
             dlButton.removeClass('disabled')

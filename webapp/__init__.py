@@ -1,4 +1,5 @@
 import glob
+
 from flask import Flask, send_file
 from flask_socketio import SocketIO
 from jinja2 import Environment, PackageLoader
@@ -52,7 +53,10 @@ def index():
 
 @socketio.on('check-status')
 def handle_json(json):
-    return Crawler.crawl(json['url'])['data']
+    if json.get('start', False):
+        return Crawler.crawl(json['url'])['data']
+    else:
+        return Crawler.check(json['url'])['data']
 
 
 @app.route('/comic/download/<type>-<int:id>.epub')
