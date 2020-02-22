@@ -14,7 +14,7 @@ logger.setLevel(logging.DEBUG if config.DEBUG else logging.INFO)
 class Crawler:
 
     @classmethod
-    def crawl(cls, url):
+    def check(cls, url):
         item = parse_url(url)
 
         result = {}
@@ -39,8 +39,7 @@ class Crawler:
             }
             return result
 
-        thread_name = "CrawlerThread." + item.domain.value + "@" + item.id
-        thread = get_thread(thread_name)
+        thread = get_thread(get_thread_name(item))
         if thread:
             result['item'] = thread.item
             result['data'] = {
@@ -50,23 +49,39 @@ class Crawler:
             }
             return result
         else:
-            thread = CrawlerThread(name=thread_name, item=item, url=url)
-            if thread:
-                thread.start()
-                result['item'] = thread.item
-                result['data'] = {
-                    "code": 201,
-                    "status": "started",
-                    "message": "crawler thread started."
-                }
-                return result
-            else:
-                result['data'] = {
-                    "code": 401,
-                    "status": "error",
-                    "message": "Create crawler thread failed."
-                }
-                return result
+            result['data'] = {
+                "code": 404,
+                "status": "absent",
+                "message": "not crawled yet",
+            }
+            return result
+
+    @classmethod
+    def crawl(cls, url):
+        result = cls.check(url)
+        if result['data']['code'] != 404:
+            return result
+
+        item = result['item']
+        result.clear()
+
+        thread = CrawlerThread(name=get_thread_name(item), item=item, url=url)
+        if thread:
+            thread.start()
+            result['item'] = thread.item
+            result['data'] = {
+                "code": 201,
+                "status": "started",
+                "message": "crawler thread started."
+            }
+            return result
+        else:
+            result['data'] = {
+                "code": 401,
+                "status": "error",
+                "message": "create crawler thread failed."
+            }
+            return result
 
 
 def parse_url(url):
@@ -89,6 +104,10 @@ def parse_url(url):
         return item
     else:
         return None
+
+
+def get_thread_name(item):
+    return "CrawlerThread." + item.domain.value + "@" + item.id
 
 
 def get_thread(thread_name):

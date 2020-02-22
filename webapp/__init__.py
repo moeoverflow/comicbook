@@ -1,4 +1,6 @@
 import glob
+import logging
+
 from flask import Flask, send_file
 from flask_socketio import SocketIO
 from jinja2 import Environment, PackageLoader
@@ -19,7 +21,10 @@ sentry_sdk.init(
 env = Environment(loader=PackageLoader('comicbook', 'webapp/templates'))
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secret!'
-socketio = SocketIO(app)
+socketio = SocketIO(app, cors_allowed_origins=config.URL)
+
+logging.getLogger('socketio').setLevel(logging.WARNING)
+logging.getLogger('engineio').setLevel(logging.WARNING)
 
 
 def which_type(type):
@@ -52,7 +57,10 @@ def index():
 
 @socketio.on('check-status')
 def handle_json(json):
-    return Crawler.crawl(json['url'])['data']
+    if json.get('start', False):
+        return Crawler.crawl(json['url'])['data']
+    else:
+        return Crawler.check(json['url'])['data']
 
 
 @app.route('/comic/download/<type>-<int:id>.epub')
