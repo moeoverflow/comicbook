@@ -1,4 +1,5 @@
 import glob
+import logging
 
 from flask import Flask, send_file
 from flask_socketio import SocketIO
@@ -20,7 +21,10 @@ sentry_sdk.init(
 env = Environment(loader=PackageLoader('comicbook', 'webapp/templates'))
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secret!'
-socketio = SocketIO(app)
+socketio = SocketIO(app, cors_allowed_origins=config.URL)
+
+logging.getLogger('socketio').setLevel(logging.WARNING)
+logging.getLogger('engineio').setLevel(logging.WARNING)
 
 
 def which_type(type):
