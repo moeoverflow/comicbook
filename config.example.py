@@ -3,6 +3,13 @@ from enum import Enum
 
 URL = 'https://comic.moeoverflow.com'
 
+CORS_ALLOWED_ORIGINS = [
+    URL,
+    "https://nhentai.net",
+    "https://e-hentai.org/",
+    "https://wnacg.org/"
+]
+
 DEBUG = False
 
 TELEGRAM_BOT_TOKEN = ''
