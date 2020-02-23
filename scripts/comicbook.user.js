@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         comicbook
-// @namespace    http://comicbook.moeoverflow.com/
+// @namespace    https://moeoverflow.com/
 // @version      0.1
 // @description  download epub with comicbook
 // @author       everpcpc
@@ -109,9 +109,12 @@ GM_addStyle(`
         });
     }
 
-
-    var galleries = document.querySelectorAll('#content .index-container .gallery');
-    Array.prototype.forEach.call(galleries, function (element, idx) {
+    var galleries = [
+        ...document.querySelectorAll('#content .index-container .gallery'),
+        ...document.querySelectorAll('#content .container .gallery-favorite .gallery'),
+        ...document.querySelectorAll('#content .container .gallery'),
+    ];
+    Array.prototype.forEach.call(galleries, function (element) {
         let progressBar = document.createElement('div');
         let url = element.querySelectorAll('.cover')[0].href;
         progressBar.classList.add('progressBar');
