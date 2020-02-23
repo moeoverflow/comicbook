@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         comicbook
 // @namespace    https://moeoverflow.com/
-// @version      0.1
+// @version      0.2
 // @description  download epub with comicbook
 // @author       everpcpc
 // @match        https://nhentai.net/*
@@ -13,18 +13,13 @@ GM_addStyle(`
     .progressBar {
         position: absolute;
         display: block;
-        z-index: 100;
+        z-index: 5;
         left: 0;
         right: 0;
         top: 0;
         width: 100%;
         text-align: center;
         background-color: grey;
-    }
-    .download {
-        width: 100%;
-        height: 100%;
-        cursor: pointer;
     }
     .progress {
         width: 0;
@@ -43,82 +38,70 @@ GM_addStyle(`
     var socket = io(COMICBOOK_DOMAIN + ':443');
     var intervals = Object();
 
-    var iconDownload = `<i class="fa fa-download"></i>`;
-    var iconProgress = `<i class="fa fa-tachometer"></i>`;
 
-
-    function checkStatus(element, url) {
+    function checkStatus(element, url, start = false) {
         socket.emit('check-status', {
             url: url,
-            start: false
+            start: start
         }, function (response) {
             checkResponse(element, url, response);
         });
     }
 
 
-    function updateProgress(element, percent) {
-        element.querySelectorAll('.progress')[0].style.width = percent;
-        element.querySelectorAll('span')[0].innerHTML = iconProgress + percent;
-    }
-
-
-    function checkResponse(element, url, response) {
+    function updateProgress(element, url, text = '', percent = '0%') {
         let interval = intervals[url];
-        if (response.status == 'ready') {
-            if (interval != null) {
-                clearInterval(interval);
-            }
-            element.onclick = function () { window.location = 'https://' + COMICBOOK_DOMAIN + response.url };
-            element.innerHTML = `<div class="download">` + iconDownload + `</div><span></span>`;
-            element.style.background = 'green';
-        } else if (response.status == 'generating') {
+        let progressInner = element.querySelectorAll('.progress')[0];
+        let progressIcon = element.querySelectorAll('i')[0]
+        element.querySelectorAll('span')[0].innerHTML = ' ' + text;
+        if (text) {
+            element.onclick = null;
+            element.style.cursor = 'default';
             if (interval == null) {
                 intervals[url] = setInterval(function () { checkStatus(element, url) }, 3000);
             }
-            element.onclick = null;
-            updateProgress(element, (response.progress * 100).toFixed(2) + '%');
-        } else if (response.status == 'started') {
-            if (interval == null) {
-                intervals[url] = setInterval(function () { checkStatus(element, url) }, 3000);
-            }
-            element.onclick = null;
-            updateProgress(element, '1%');
-        } else if (response.status == 'absent') {
+            progressIcon.classList = 'fa fa-tachometer';
+            progressInner.style.width = percent;
+        } else {
+            element.style.cursor = 'pointer';
             if (interval != null) {
                 clearInterval(interval);
             }
-            element.onclick = function () { startDownload(element, url) };
-            element.innerHTML = `<div class="download">` + iconDownload + `</div><span></span>`;
+            progressIcon.classList = 'fa fa-download';
         }
     }
 
 
-    function startDownload(element, url) {
-        let progress = element.querySelectorAll('.download')[0];
-        progress.innerHTML = "";
-        progress.classList.add('progress');
-        progress.classList.remove('download');
-        element.querySelectorAll('span')[0].innerHTML = iconProgress + 'starting...';
-
-        socket.emit('check-status', {
-            url: url,
-            start: true
-        }, function (response) {
-            checkResponse(element, url, response);
-        });
+    function checkResponse(element, url, response) {
+        if (response.status == 'ready') {
+            element.onclick = function () { window.location = 'https://' + COMICBOOK_DOMAIN + response.url };
+            updateProgress(element, url);
+            element.style.background = 'green';
+        } else if (response.status == 'generating') {
+            let percent = (response.progress * 100).toFixed(2) + '%';
+            updateProgress(element, url, percent, percent);
+        } else if (response.status == 'started') {
+            updateProgress(element, url, 'started', '1%');
+        } else if (response.status == 'absent') {
+            element.onclick = function () {
+                updateProgress(element, url, 'starting...', '0%');
+                checkStatus(element, url, true);
+            };
+            updateProgress(element, url);
+        }
     }
 
+
     var galleries = [
-        ...document.querySelectorAll('#content .index-container .gallery'),
-        ...document.querySelectorAll('#content .container .gallery-favorite .gallery'),
         ...document.querySelectorAll('#content .container .gallery'),
+        ...document.querySelectorAll('#content .container .gallery-favorite .gallery'),
     ];
     Array.prototype.forEach.call(galleries, function (element) {
-        let progressBar = document.createElement('div');
         let url = element.querySelectorAll('.cover')[0].href;
+        let progressBar = document.createElement('div');
         progressBar.classList.add('progressBar');
         element.appendChild(progressBar);
+        progressBar.innerHTML = `<div class="progress"></div><i></i><span></span>`;
         checkStatus(progressBar, url);
     });
 
