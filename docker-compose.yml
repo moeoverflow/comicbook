@@ -1,0 +1,12 @@
+version: '3'
+
+services:
+  comicbook:
+    container_name: comicbook
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    expose:
+      - 8080
+    ports:
+      - 5000:8080

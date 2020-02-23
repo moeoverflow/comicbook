@@ -1,0 +1,11 @@
+# add git-ignore syntax here of things you don't want copied into docker image
+
+venv
+Dockerfile*
+docker-compose*
+.dockerignore
+.git
+.gitignore
+README.md
+LICENSE
+.vscode
