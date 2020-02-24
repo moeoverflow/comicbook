@@ -59,6 +59,7 @@ GM_addStyle(`
 
     /**
      * API
+     * if start == true, Comicbook server will try to generate this comic epub file
      */
     function checkStatus(url, start = false, callback) {
         socket.emit('check-status', {
@@ -68,7 +69,10 @@ GM_addStyle(`
     }
 
     /**
-     * status manager
+     * The main function of this part of the code is to manage the download status of multiple comics,
+     * and to decide whether to poll the status.
+     * As a universal design, it should work on different websites,which means that most of the time,
+     * when we adapt this script to a new website, we should not change this part of the code too much.
      */
     var Manager = function () {};
     Manager.prototype.doCheck = function (url, start = false) {
@@ -91,6 +95,10 @@ GM_addStyle(`
             }
         })
     }
+    /**
+     * @param url the url of comic
+     * @param updateDOM A callback function to update the DOM when a new status is updated
+     */
     Manager.prototype.watchItem = function (url, updateDOM) {
         let self = this;
         this[url] = {
@@ -103,9 +111,14 @@ GM_addStyle(`
     }
     var manager = new Manager();
 
+
     /**
-     * gallery page
+     * This part of the code is used to add interactive UI components,
+     * such as download buttons or progress indicator,
+     * to the target website.
      */
+
+    // handle nhentai.net gallery page
     (function () {
         function updateProgress(element, text = '', percent = '0%') {
             let progressInner = element.querySelectorAll('.progress')[0];
@@ -157,9 +170,7 @@ GM_addStyle(`
         });
     })();
 
-    /**
-     * detail page
-     */
+    // handle nhentai.net detail page
     (function () {
         var url = window.location.href;
         if (!url.match(/nhentai.net\/g\//)) return;
