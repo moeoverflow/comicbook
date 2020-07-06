@@ -50,7 +50,7 @@ class ComicPipeline():
 
         if len(self.item.language) > 0:
             for language in self.item.language:
-                if language is 'translated':
+                if language == 'translated':
                     continue
                 self.epub.language = get_language_code(language)
         else:
