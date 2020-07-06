@@ -36,14 +36,14 @@ class NhentaiSpider:
 
             selector = etree.HTML(r.text)
 
-            en_title = selector.xpath('//*[@id="info"]/h1/text()')
-            jp_title = selector.xpath('//*[@id="info"]/h2/text()')
+            en_title = selector.xpath('//*[@id="info"]/h1/span[2]/text()')
+            jp_title = selector.xpath('//*[@id="info"]/h2/span[2]/text()')
             item.titles = jp_title + en_title
-            item.author = selector.xpath('//*[@id="tags"]/div[4]/span[1]/a/text()')
+            item.author = selector.xpath('//*[@id="tags"]/div[4]/span[1]/a/span[1]/text()')
 
-            item.tags = selector.xpath('//*[@id="tags"]/div[3]/span/a/text()')
-            item.language = selector.xpath('//*[@id="tags"]/div[6]/span/a/text()')
-            item.image_urls = selector.xpath('//*[@id="thumbnail-container"]/div/a/img/@data-src')
+            item.tags = selector.xpath('//*[@id="tags"]/div[3]/span/a/span[1]/text()')
+            item.language = selector.xpath('//*[@id="tags"]/div[6]/span/a/span[1]/text()')
+            item.image_urls = selector.xpath('//*[@id="thumbnail-container"]/div/div/a/img/@data-src')
             item.image_urls = list(map(convert_url, item.image_urls))
             item.source = self.url
             thread.progress = 0.05

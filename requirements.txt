@@ -2,7 +2,7 @@ asn1crypto==0.24.0
 beautifulsoup4==4.6.3
 blinker==1.4
 certifi==2018.11.29
-cffi==1.11.5
+cffi==1.14.0
 chardet==3.0.4
 Click==7.0
 comicepub==0.2.0
@@ -29,4 +29,4 @@ requests==2.22.0
 sentry-sdk==0.7.4
 six==1.11.0
 urllib3==1.25.2
-Werkzeug==0.15.3
+Werkzeug==1.0.1
