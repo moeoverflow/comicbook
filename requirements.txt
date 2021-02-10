@@ -6,7 +6,7 @@ cffi==1.14.0
 chardet==3.0.4
 Click==7.0
 comicepub==0.2.0
-cryptography==3.2
+cryptography==3.3.2
 dnspython==1.16.0
 eventlet==0.24.1
 Flask==1.0.2
