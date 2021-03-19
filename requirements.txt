@@ -16,7 +16,7 @@ greenlet==0.4.15
 gunicorn==19.9.0
 idna==2.7
 itsdangerous==1.1.0
-Jinja2==2.10.1
+Jinja2==2.11.3
 lxml==4.6.2
 MarkupSafe==1.1.0
 monotonic==1.5
