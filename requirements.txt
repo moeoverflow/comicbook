@@ -17,7 +17,7 @@ gunicorn==19.9.0
 idna==2.7
 itsdangerous==1.1.0
 Jinja2==2.10.1
-lxml==4.6.2
+lxml==4.6.3
 MarkupSafe==1.1.0
 monotonic==1.5
 pycparser==2.19
