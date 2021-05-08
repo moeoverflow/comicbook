@@ -8,7 +8,7 @@ Click==7.0
 comicepub==0.2.0
 cryptography==3.2
 dnspython==1.16.0
-eventlet==0.24.1
+eventlet==0.31.0
 Flask==1.0.2
 Flask-SocketIO==3.1.1
 future==0.17.1
