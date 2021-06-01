@@ -28,5 +28,5 @@ python-telegram-bot==11.1.0
 requests==2.22.0
 sentry-sdk==0.7.4
 six==1.11.0
-urllib3==1.25.2
+urllib3==1.26.5
 Werkzeug==1.0.1
