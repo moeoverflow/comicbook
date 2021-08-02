@@ -1,0 +1,24 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+comicepub = "*"
+beautifulsoup4 = "*"
+requests = "*"
+flask = "*"
+flask-socketio = "*"
+blinker = "*"
+jinja2 = "*"
+lxml = "*"
+pymongo = "*"
+python-telegram-bot = "*"
+sentry-sdk = "*"
+gunicorn = "==20.1.0"
+eventlet = "==0.30.2"
+
+[dev-packages]
+
+[requires]
+python_version = "3.9"

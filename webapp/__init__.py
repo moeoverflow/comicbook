@@ -3,7 +3,7 @@ import logging
 
 from flask import Flask, send_file
 from flask_socketio import SocketIO
-from jinja2 import Environment, PackageLoader
+from jinja2 import Environment, FileSystemLoader
 
 import config
 from crawler import Crawler
@@ -18,7 +18,7 @@ sentry_sdk.init(
     integrations=[FlaskIntegration()]
 )
 
-env = Environment(loader=PackageLoader('comicbook', 'webapp/templates'))
+env = Environment(loader=FileSystemLoader('webapp/templates'))
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secret!'
 socketio = SocketIO(app, cors_allowed_origins=config.CORS_ALLOWED_ORIGINS)

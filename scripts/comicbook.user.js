@@ -1,11 +1,11 @@
 // ==UserScript==
 // @name         comicbook
 // @namespace    https://moeoverflow.com/
-// @version      0.3
+// @version      0.3.1
 // @description  download epub with comicbook
 // @author       everpcpc
 // @match        https://nhentai.net/*
-// @require      https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js
+// @require      https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.1.3/socket.io.js
 // @grant        GM_addStyle
 // ==/UserScript==
 
