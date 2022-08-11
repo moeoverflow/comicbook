@@ -49,5 +49,12 @@ DOWNLOAD_URL = {
     DOMAIN.wnacg_org: "/comic/download/wnacg-{params[id]}.epub",
 }
 COOKIES = {
-    DOMAIN.nhentai_net: {},
+    DOMAIN.nhentai_net: {
+        "csrftoken": "xxx",
+        "sessionid": "xxx",
+        "cf_clearance": "xxx",
+    },
+}
+USER_AGENT = {
+    DOMAIN.nhentai_net: "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36",  # NOQA
 }
