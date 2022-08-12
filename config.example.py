@@ -27,6 +27,9 @@ class DOMAIN(Enum):
     wnacg_org = "wnacg.org"
     none = "none"
 
+    def __str__(self):
+        return self.value
+
 
 COMIC_ROOT_PATH = "/storage/comic"
 
