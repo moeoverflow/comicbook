@@ -18,16 +18,20 @@ class NhentaiSpider:
         self.url = url
 
     def crawl(self, item, thread):
-        match = re.search(r'nhentai.net/g/\d+', self.url)
+        match = re.search(r"nhentai.net/g/\d+", self.url)
         if not match:
             logger.info(" url not match")
             return None
-        if 'https' not in self.url:
-            self.url = 'https://' + self.url
+        if "https" not in self.url:
+            self.url = "https://" + self.url
+
+        cookies = config.COOKIES.get(item.domain, {})
+        user_agent = config.USER_AGENT.get(item.domain, ua.get_random_ua())
 
         session = requests.Session()
-        session.headers.update({'User-Agent': ua.get_random_ua()})
+        session.headers.update({"User-Agent": user_agent})
         session.proxies.update(config.PROXY)
+        session.cookies.update(cookies)
 
         try:
             logger.info("fetching " + self.url)
@@ -43,7 +47,9 @@ class NhentaiSpider:
 
             item.tags = selector.xpath('//*[@id="tags"]/div[3]/span/a/span[1]/text()')
             item.language = selector.xpath('//*[@id="tags"]/div[6]/span/a/span[1]/text()')
-            item.image_urls = selector.xpath('//*[@id="thumbnail-container"]/div/div/a/img/@data-src')
+            item.image_urls = selector.xpath(
+                '//*[@id="thumbnail-container"]/div/div/a/img/@data-src'
+            )
             item.image_urls = list(map(convert_url, item.image_urls))
             item.source = self.url
             thread.progress = 0.05
@@ -54,9 +60,9 @@ class NhentaiSpider:
 
 
 def convert_url(url):
-    match_type = re.search(r'jpg|png|gif$', url)
+    match_type = re.search(r"jpg|png|gif$", url)
     type = match_type.group()
-    match_url = re.search(r'\.nhentai\.net/galleries/(\d+)/(\d+)', url)
+    match_url = re.search(r"\.nhentai\.net/galleries/(\d+)/(\d+)", url)
     id = match_url.group(1)
     index = match_url.group(2)
     return "https://i.nhentai.net/galleries/%s/%s.%s" % (id, index, type)

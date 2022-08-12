@@ -21,7 +21,7 @@ $ pipenv run python comicbook.py --help
 ```Shell
 $ pipenv run gunicorn --worker-class eventlet -w 1 --threads 12 -b 127.0.0.1:5000 webapp:app
 # or
-$ pipenv run comicbook.py --server
+$ pipenv run python comicbook.py --server
 
 # run server and bot.
 $ pipenv run python comicbook.py --server --telegram-bot
