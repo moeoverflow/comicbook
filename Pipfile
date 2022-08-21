@@ -4,7 +4,6 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-comicepub = "*"
 beautifulsoup4 = "*"
 requests = "*"
 flask = "*"
@@ -17,6 +16,7 @@ python-telegram-bot = "*"
 sentry-sdk = "*"
 gunicorn = "*"
 eventlet = "*"
+comicepub = {editable = true, ref = "925c01de2c30cdf162dc5c8f2b98438be3b9f7d4", git = "https://github.com/moeoverflow/comicepub"}
 
 [dev-packages]
 black = "*"
