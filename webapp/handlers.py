@@ -1,3 +1,4 @@
+import os
 import logging
 
 import sentry_sdk
@@ -19,23 +20,22 @@ app = FastAPI()
 app.mount("/static", StaticFiles(directory="webapp/static"), name="static")
 
 
-@app.route("/")
+@app.get("/")
 def index(request: Request):
     return templates.TemplateResponse("index.html", {"request": request})
 
 
-@app.route("/comic/download/{comic_type}-{comic_id}.epub")
+@app.get("/comic/download/{comic_type}-{comic_id}.epub")
 async def download_comic(comic_type: str, comic_id: int):
     file_path = comic_file(which_type(comic_type), str(comic_id))
     if file_path is None:
-        raise HTTPException(status_code=404, detail="Comic not found")
+        raise HTTPException(status_code=404, detail="comic not found")
     else:
-        return FileResponse(file_path, media_type="application/epub+zip")
-
-
-@app.exception_handler(404)
-async def page_not_found(request: Request, __):
-    return templates.TemplateResponse("404.html", {"request": request})
+        return FileResponse(
+            file_path,
+            media_type="application/epub+zip",
+            filename=os.path.basename(file_path),
+        )
 
 
 sio = SocketManager(
@@ -51,9 +51,9 @@ sio = SocketManager(
 async def handle_status(sid, data):
     url = data.get("url")
     if url is None:
-        return {"status": "error", "data": "No url provided"}
+        return {"status": "error", "error": "no url provided"}
     else:
         if data.get("start", False):
-            return Crawler.crawl(url)["data"]
+            return Crawler.add_download_task(url)["data"]
         else:
             return Crawler.check(url)["data"]

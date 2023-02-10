@@ -1,9 +1,10 @@
 # coding: UTF-8
 
 import sys
+import json
 import getopt
 
-from crawler.__init__ import Crawler
+from crawler import Crawler
 
 import config
 from bot import ComicbookTelegramBot
@@ -42,7 +43,9 @@ if __name__ == "__main__":
             print(help)
         if opt in ("-c", "--comic"):
             link = arg
-            Crawler.crawl(link)
+            result = Crawler.download(link)
+            result.pop("item")
+            print(json.dumps(result, indent=2))
         if opt in ("-o", "--output"):
             output = arg
         if opt in ("-v", "--version"):

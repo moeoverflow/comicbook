@@ -19,6 +19,7 @@ PROXY = {
 CALIBRE_LIBRARY_PATH = ""
 
 MONGODB_URL = "mongodb://localhost:27017/"
+REDIS_URL = "redis://localhost:6379/0"
 
 
 class DOMAIN(Enum):

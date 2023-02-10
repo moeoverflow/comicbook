@@ -5,13 +5,12 @@ from db.mongodb import comicbook_calibre
 
 
 class Storage:
-
     def __init__(self, domain, id):
         self.domain = domain
         self.id = id
 
     def check_comic(self):
-        result = comicbook_calibre.find_one({'domain': self.domain.value, 'id': self.id})
+        result = comicbook_calibre.find_one({"domain": self.domain.value, "id": self.id})
         if result is not None:
             return True
         else:
@@ -27,7 +26,7 @@ class Storage:
         return "%s/%s" % (config.COMIC_PATHS[self.domain], self.get_comic_file_name())
 
     def get_comic_public_download_url(self):
-        return config.DOWNLOAD_URL[self.domain].format(params={'id': self.id})
+        return config.DOWNLOAD_URL[self.domain].format(params={"id": self.id})
 
     @staticmethod
     def get_calibre_epub_file(path):

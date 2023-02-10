@@ -1,1 +1,1 @@
-from .app import app  # NOQA
+from .handlers import app  # NOQA

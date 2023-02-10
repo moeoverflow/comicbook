@@ -19,12 +19,16 @@ $ pipenv run python comicbook.py --help
 ## Webapp
 
 ```Shell
-$ pipenv run gunicorn --worker-class eventlet -w 1 --threads 12 -b 127.0.0.1:5000 webapp:app
-# or
-$ pipenv run python comicbook.py --server
+$ pipenv run uvicorn --host 127.0.0.1 --port 5000 webapp:app
 
 # run server and bot.
 $ pipenv run python comicbook.py --server --telegram-bot
+```
+
+## Celery task worker
+
+```shell
+$ pipenv run celery -A crawler worker -l INFO
 ```
 
 ## Docker Deploy Note
@@ -103,6 +107,7 @@ example comicbook config.py
 CALIBRE_LIBRARY_PATH = '/usr/src/app/library'
 
 MONGODB_URL = 'mongodb://mongo:27017/'
+REDIS_URL = 'redis://redis:6379/0'
 
 # ...
 ```
