@@ -33,7 +33,7 @@ if __name__ == "__main__":
     argv = sys.argv[1:]
     try:
         opts, args = getopt.getopt(
-            argv, "hvc:o:ts", ["help", "version", "comic=", "output=", "telegram-bot", "server"]
+            argv, "hvc:o:ts", ["help", "version", "comic=", "output=", "telegram-bot"]
         )
     except getopt.GetoptError:
         print(help)

@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "cf330a220634e509529610228180dd51a28730baeb5c48446ad9fc01c077a521"
+            "sha256": "36f18bcc0d0dacdd28d9cd8b2901d7404a8473fb4d06b485e36e6d7d9ba23294"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -207,11 +207,11 @@
             "version": "==0.2.0"
         },
         "comicepub": {
-            "git": "https://github.com/moeoverflow/comicepub",
             "hashes": [
-                "sha256:f9fadb2003d648b6b6eea952e7b74c237dd86d0aeedcea384742d3786098e0d4"
+                "sha256:b6245d04199039443e95f3627a0d567badc44db091c1f8fb4063b908c4417702"
             ],
-            "ref": "925c01de2c30cdf162dc5c8f2b98438be3b9f7d4"
+            "index": "pypi",
+            "version": "==0.2.2"
         },
         "dnspython": {
             "hashes": [
