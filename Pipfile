@@ -4,19 +4,18 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-comicepub = "*"
 beautifulsoup4 = "*"
 requests = "*"
-flask = "*"
-flask-socketio = "*"
-blinker = "*"
-jinja2 = "*"
+fastapi = "*"
+fastapi-socketio = "*"
+uvicorn = "*"
 lxml = "*"
 pymongo = "*"
+redis = "*"
+celery = {version="*", extras=["redis"]}
 python-telegram-bot = "*"
-sentry-sdk = "*"
-gunicorn = "*"
-eventlet = "*"
+sentry-sdk = {version="*", extras=["fastapi"]}
+comicepub = "*"
 
 [dev-packages]
 black = "*"

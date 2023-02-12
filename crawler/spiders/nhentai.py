@@ -17,10 +17,10 @@ class NhentaiSpider:
     def __init__(self, url):
         self.url = url
 
-    def crawl(self, item, thread):
+    def crawl(self, item):
         match = re.search(r"nhentai.net/g/\d+", self.url)
         if not match:
-            logger.info(" url not match")
+            logger.warn("url not match")
             return None
         if "https" not in self.url:
             self.url = "https://" + self.url
@@ -52,10 +52,9 @@ class NhentaiSpider:
             )
             item.image_urls = list(map(convert_url, item.image_urls))
             item.source = self.url
-            thread.progress = 0.05
             return item
         except ConnectionError as e:
-            print(e)
+            logger.error(e)
             return None
 
 

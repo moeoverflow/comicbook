@@ -1,12 +1,23 @@
 version: '3'
 
 services:
-  comicbook:
-    container_name: comicbook
+  redis:
+    image: redis
+    ports:
+      - 6379:6379
+  comicbook-web:
     build:
       context: .
       dockerfile: ./Dockerfile
-    expose:
-      - 8080
     ports:
-      - 5000:8080
+      - 8080:8080
+    depends_on:
+      - redis
+    command: pipenv run uvicorn --host 0.0.0.0 --port 8080 webapp:app
+  comicbook-worker:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    depends_on:
+      - redis
+    command: pipenv run celery -A crawler worker -l INFO
