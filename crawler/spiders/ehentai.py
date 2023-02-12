@@ -25,7 +25,7 @@ class EhentaiSpider:
         if "https" not in self.url:
             self.url = "https://" + self.url
         if self.url[-1] == "/":
-            url = self.url[:-1]
+            self.url = self.url[:-1]
         # data = match.group().split("/")
         # gid = data[-2]
         # token = data[-1]
@@ -42,7 +42,7 @@ class EhentaiSpider:
         session.proxies.update(config.PROXY)
 
         try:
-            r = session.get(url)
+            r = session.get(self.url)
             soup = BeautifulSoup(r.text, "html.parser")
             en_title = soup.select("#gn")[0].string
             jp_title = soup.select("#gj")[0].string
@@ -74,11 +74,10 @@ class EhentaiSpider:
             item.image_urls = []
 
             for page_index in range(page_num):
-                page_r = session.get(url, params={"p": page_index})
+                page_r = session.get(self.url, params={"p": page_index})
                 page_soup = BeautifulSoup(page_r.text, "html.parser")
 
                 thumb_images_container = page_soup.select('#gdt div[class="gdtm"]')
-                # total_images_count = len(thumb_images_container)
 
                 for container in thumb_images_container:
                     images_page_url = container.select("div a")[0].get("href")
@@ -90,7 +89,6 @@ class EhentaiSpider:
                     for img in imgs:
                         if re.search(r"/h/", img["src"]):
                             item.image_urls.append(img["src"])
-                            # progress = 0.15 * (len(item.image_urls) / total_images_count)
 
             return item
         except ConnectionError as e:
