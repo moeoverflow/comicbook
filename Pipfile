@@ -5,7 +5,7 @@ name = "pypi"
 
 [packages]
 beautifulsoup4 = "*"
-requests = "*"
+requests = {version="*", extras=["socks"]}
 fastapi = "*"
 fastapi-socketio = "*"
 uvicorn = "*"
