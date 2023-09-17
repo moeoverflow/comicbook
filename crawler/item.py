@@ -65,10 +65,10 @@ def item_from_url(url):
     if match:
         item.id = match.group(1)
         item.domain = config.DOMAIN.nhentai_net
-    match = re.search(r"wnacg\.org\/photos-index-aid-([0-9]+)\.html$", url)
+    match = re.search(r"wnacg\.com\/photos-index-aid-([0-9]+)\.html$", url)
     if match:
         item.id = match.group(1)
-        item.domain = config.DOMAIN.wnacg_org
+        item.domain = config.DOMAIN.wnacg_com
     match = re.search(r"e-hentai\.org/g/(\d+)/(\w+)", url)
     if match:
         item.id = match.group(1)

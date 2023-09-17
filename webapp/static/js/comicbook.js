@@ -15,7 +15,7 @@ var regex = 'regExp[/\
 |\
 ((http\:\/\/)?e-hentai.org\/g\/[0-9]+\/[0-9a-z]+(\/)?$)\
 |\
-((http(s)?\:\/\/)?(www.)?wnacg.org\/photos-index-aid-[0-9]+.html$)\
+((http(s)?\:\/\/)?(www.)?wnacg.com\/photos-index-aid-[0-9]+.html$)\
 /]'
 
 comicForm.form({

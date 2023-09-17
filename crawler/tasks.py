@@ -16,7 +16,7 @@ from .utils.storage import Storage
 SPIDERS = {
     DOMAIN.nhentai_net: NhentaiSpider,
     DOMAIN.ehentai_org: EhentaiSpider,
-    DOMAIN.wnacg_org: WnacgSpider,
+    DOMAIN.wnacg_com: WnacgSpider,
 }
 COMIC_PROGRESS_KEY = "comic:progress:{}:{}"
 
