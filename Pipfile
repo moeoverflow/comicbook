@@ -8,7 +8,7 @@ beautifulsoup4 = "*"
 requests = {version="*", extras=["socks"]}
 fastapi = "*"
 fastapi-socketio = "*"
-uvicorn = "*"
+uvicorn = {version="*", extras=["websockets"]}
 lxml = "*"
 pymongo = "*"
 redis = "*"
