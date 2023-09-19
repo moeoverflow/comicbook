@@ -5,16 +5,17 @@ name = "pypi"
 
 [packages]
 beautifulsoup4 = "*"
-requests = "*"
+requests = {version="*", extras=["socks"]}
 fastapi = "*"
 fastapi-socketio = "*"
-uvicorn = "*"
+uvicorn = {version="*", extras=["websockets"]}
 lxml = "*"
 pymongo = "*"
 redis = "*"
 celery = {version="*", extras=["redis"]}
 python-telegram-bot = "*"
 sentry-sdk = {version="*", extras=["fastapi"]}
+jinja2 = "*"
 comicepub = "*"
 
 [dev-packages]
@@ -22,4 +23,4 @@ black = "*"
 flake8 = "*"
 
 [requires]
-python_version = "3.10"
+python_version = "3.11"

@@ -12,7 +12,7 @@ $ pipenv sync
 ``` Shell
 $ pipenv run python comicbook.py --comic https://nhentai.net/g/{id}/
 $ pipenv run python comicbook.py --comic http://g.e-hentai.org/g/{gid}/{token}/
-$ pipenv run python comicbook.py --comic http://wnacg.org/photos-view-id-{aid}.html
+$ pipenv run python comicbook.py --comic http://wnacg.com/photos-view-id-{aid}.html
 $ pipenv run python comicbook.py --help
 ```
 
@@ -82,7 +82,7 @@ services:
       - ./comicbook-calibre-worker_data/config.js:/usr/src/app/config.js
       - ./comicbook_data/storage/comic/nhentai.net:/usr/src/app/storage/nhentai
       - ./comicbook_data/storage/comic/ehentai.org:/usr/src/app/storage/ehentai
-      - ./comicbook_data/storage/comic/wnacg.org:/usr/src/app/storage/wnacg
+      - ./comicbook_data/storage/comic/wnacg.com:/usr/src/app/storage/wnacg
   comicbook-calibre-web:
     container_name: comicbook-calibre-web
     build:

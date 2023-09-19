@@ -19,7 +19,7 @@ class WnacgSpider:
         self.url = url
 
     def crawl(self, item):
-        match = re.search(r"wnacg\.org", self.url)
+        match = re.search(r"wnacg\.com", self.url)
         if not match:
             logger.warn("url not match")
             return None
@@ -37,9 +37,13 @@ class WnacgSpider:
 
             pages = []
             img_urls = []
-            page = selector.xpath('//*[@id="bodywrap"]/div[2]/div/ul/li[1]/div[1]/a')[0].get("href")
+            page = selector.xpath('//*[@id="bodywrap"]/div[2]/div/ul/li[1]/div[1]/a')[
+                0
+            ].get("href")
             pages.append(get_full_url(page))
-            while len(pages) == 1 or (len(pages) > 1 and pages[0] != pages[len(pages) - 1]):
+            while len(pages) == 1 or (
+                len(pages) > 1 and pages[0] != pages[len(pages) - 1]
+            ):
                 current_page = pages[len(pages) - 1]
                 p = session.get(current_page)
                 sel = etree.HTML(p.text)
@@ -60,4 +64,4 @@ class WnacgSpider:
 
 
 def get_full_url(uri):
-    return "https://www.wnacg.org" + uri
+    return "https://www.wnacg.com" + uri

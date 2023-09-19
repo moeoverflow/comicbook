@@ -7,6 +7,7 @@ from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from fastapi_socketio import SocketManager
+from engineio.payload import Payload
 
 import config
 from crawler import Crawler
@@ -15,6 +16,7 @@ from .utils import comic_file, which_type
 logger = logging.getLogger(__name__)
 sentry_sdk.init(dsn=config.SENTRY_DSN)
 templates = Jinja2Templates(directory="webapp/templates")
+Payload.max_decode_packets = 50
 
 app = FastAPI()
 app.mount("/static", StaticFiles(directory="webapp/static"), name="static")

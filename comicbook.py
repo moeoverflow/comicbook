@@ -13,13 +13,12 @@ from bot import ComicbookTelegramBot
 version = "1.1.0"
 
 if __name__ == "__main__":
-
     help = """comicbook options:
       -h, --help            Show help.
       -v, --version         Show version and exit.
       -c, --comic           a comic link on > nhentai.net
                                             > e-hentai.org
-                                            > wnacg.org
+                                            > wnacg.com
       -o, --output          Specify a output path.(temporarily disabled)
       -t, --telegram-bot    Run telegram bot.
     """

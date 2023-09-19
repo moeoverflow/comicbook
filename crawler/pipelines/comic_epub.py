@@ -68,4 +68,4 @@ class ComicPipeline:
         slog.info("work done")
 
         if done_callback is not None:
-            done_callback(self.item)
+            done_callback()
