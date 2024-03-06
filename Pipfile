@@ -16,7 +16,7 @@ celery = {version="*", extras=["redis"]}
 python-telegram-bot = "*"
 sentry-sdk = {version="*", extras=["fastapi"]}
 jinja2 = "*"
-comicepub = "*"
+comicepub = {git = "https://github.com/moeoverflow/comicepub.git", ref = "c6e5ed4"}
 
 [dev-packages]
 black = "*"
