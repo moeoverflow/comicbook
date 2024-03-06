@@ -10,19 +10,25 @@ $ pipenv sync
 ## Usage
 
 ``` Shell
-$ pipenv run python comicbook.py --comic https://nhentai.net/g/{id}/
-$ pipenv run python comicbook.py --comic http://g.e-hentai.org/g/{gid}/{token}/
-$ pipenv run python comicbook.py --comic http://wnacg.com/photos-view-id-{aid}.html
 $ pipenv run python comicbook.py --help
+
+# manually download
+$ pipenv run python comicbook.py --comic http://wnacg.com/photos-view-id-{aid}.html
+
+# manually download to target dir
+$ pipenv run python comicbook.py --comic http://g.e-hentai.org/g/{gid}/{token}/ --output /path/to/output
+
+# manually download to target dir with cbz format
+$ pipenv run python comicbook.py --comic https://nhentai.net/g/{id}/ --output /path/to/output --format cbz
+
+# run bot.
+$ pipenv run python telegrambot.py
 ```
 
 ## Webapp
 
 ```Shell
 $ pipenv run uvicorn --host 127.0.0.1 --port 5000 webapp:app
-
-# run server and bot.
-$ pipenv run python comicbook.py --server --telegram-bot
 ```
 
 ## Celery task worker
