@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         comicbook
 // @namespace    https://moeoverflow.com/
-// @version      0.3.1
+// @version      0.3.2
 // @description  download epub with comicbook
 // @author       everpcpc
 // @match        https://nhentai.net/*
@@ -57,6 +57,17 @@ GM_addStyle(`
     var COMICBOOK_DOMAIN = 'h.comicbook.party';
     var socket = io(COMICBOOK_DOMAIN + ':443');
 
+    var TAGS_BLOCK = [
+        'yaoi',
+        'futanari',
+        'male only',
+    ];
+    var TAGS_WARNING = [
+        'anal',
+        'big breasts',
+        'big ass',
+    ];
+
     /**
      * API
      * if start == true, Comicbook server will try to generate this comic epub file
@@ -74,7 +85,7 @@ GM_addStyle(`
      * As a universal design, it should work on different websites,which means that most of the time,
      * when we adapt this script to a new website, we should not change this part of the code too much.
      */
-    var Manager = function () {};
+    var Manager = function () { };
     Manager.prototype.doCheck = function (url, start = false) {
         let self = this;
         var item = this[url];
@@ -88,7 +99,7 @@ GM_addStyle(`
                 item.interval = null;
             } else if (
                 (response.status === 'started' ||
-                response.status === 'generating') &&
+                    response.status === 'generating') &&
                 item.interval == null
             ) {
                 item.interval = setInterval(function () { self.doCheck(url); }, 3000);
@@ -147,7 +158,7 @@ GM_addStyle(`
             progressBar.innerHTML = `
                 <div class="progress"></div><i></i><span></span>
             `;
-            manager.watchItem(url, function updateDOM (item, response) {
+            manager.watchItem(url, function updateDOM(item, response) {
                 if (response.status == 'ready') {
                     progressBar.onclick = function () { window.location = 'https://' + COMICBOOK_DOMAIN + response.url };
                     updateProgress(progressBar);
@@ -174,6 +185,22 @@ GM_addStyle(`
     (function () {
         var url = window.location.href;
         if (!url.match(/nhentai.net\/g\//)) return;
+
+        let tags = document.querySelectorAll('#tags .tag-container .tags')[2];
+        for (let i = 0; i < tags.children.length; i++) {
+            let tag = tags.children[i];
+            let tagName = tag.querySelector("span .name");
+            let tagNameText = tagName.innerText;
+            if (TAGS_BLOCK.includes(tagNameText)) {
+                tagName.style.background = 'red';
+                tagName.style.color = 'white';
+            }
+            if (TAGS_WARNING.includes(tagNameText)) {
+                tagName.style.background = 'orange';
+                tagName.style.color = 'white';
+            }
+        }
+
         var containers = document.querySelectorAll('#info-block .buttons');
         if (containers.length === 0) return;
 
@@ -187,7 +214,7 @@ GM_addStyle(`
         epubButton.style.display = 'none';
         container.appendChild(epubButton);
 
-        manager.watchItem(url, function updateDOM (item, response) {
+        manager.watchItem(url, function updateDOM(item, response) {
             epubButton.style.display = 'inline-block';
             if (response.status == 'ready') {
                 epubButton.onclick = function () { window.location = 'https://' + COMICBOOK_DOMAIN + response.url };

@@ -45,6 +45,7 @@ class WnacgSpider:
                 len(pages) > 1 and pages[0] != pages[len(pages) - 1]
             ):
                 current_page = pages[len(pages) - 1]
+                logger.info("crawl page [%d]: %s", len(pages), current_page)
                 p = session.get(current_page)
                 sel = etree.HTML(p.text)
                 img_url = sel.xpath('//*[@id="picarea"]')[0].get("src")

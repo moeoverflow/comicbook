@@ -6,7 +6,8 @@ from db.redis import rds
 
 from .celery import app
 from .item import item_from_url
-from .pipelines.comic_epub import ComicPipeline
+from .pipelines.comic_epub import ComicPipeline as EPUBPipeline
+from .pipelines.comic_cbz import ComicPipeline as CBZPipeline
 from .spiders.ehentai import EhentaiSpider
 from .spiders.nhentai import NhentaiSpider
 from .spiders.wnacg import WnacgSpider
@@ -63,7 +64,7 @@ def crawl_comic(url):
         return f"ERR: already in progress: {_domain.value} {_id}"
 
     set_progress(_domain, _id, 0.01)
-    pipeline = ComicPipeline(item)
+    pipeline = EPUBPipeline(item)
     dir = storage.get_comic_file_downloading_path()
 
     def progress_callback(progress):
@@ -89,4 +90,28 @@ def crawl_comic(url):
         progress_callback=progress_callback,
         done_callback=done_callback,
     )
+    return f"DONE: {_domain.value} {_id}"
+
+
+def crawl_comic_manually(url, ftype, output):
+    item = item_from_url(url)
+    _domain = item.domain
+    _id = item.id
+    spider = SPIDERS[_domain](url)
+    item = spider.crawl(item=item)
+    if item is None:
+        return f"ERR: crawl failed: {_domain.value} {_id}"
+    if not item.titles:
+        return f"ERR: no title: {_domain.value} {_id}"
+
+    if ftype == "epub":
+        pipeline = EPUBPipeline(item)
+    elif ftype == "cbz":
+        pipeline = CBZPipeline(item)
+    else:
+        return f"ERR: unsupported format: {ftype}"
+    tmp_dir = os.path.join(output, f"{_domain.value}@{_id}.tmp")
+    dir = os.path.join(output, f"{_domain.value}@{_id}.{ftype}")
+    pipeline.generate(dir=tmp_dir)
+    os.rename(tmp_dir, dir)
     return f"DONE: {_domain.value} {_id}"

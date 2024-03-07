@@ -1,6 +1,6 @@
 from .item import item_from_url
 from .utils.storage import Storage
-from .tasks import crawl_comic, get_progress
+from .tasks import crawl_comic, crawl_comic_manually, get_progress
 
 
 class Crawler:
@@ -68,3 +68,10 @@ class Crawler:
             return result
         crawl_comic(url)
         return cls.check(url)
+
+    @classmethod
+    def download_manually(cls, url, ftype, output):
+        """
+        Download comic as epub/cbz file to output path.
+        """
+        return crawl_comic_manually(url, ftype, output)
