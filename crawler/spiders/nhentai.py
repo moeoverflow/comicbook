@@ -4,6 +4,7 @@ import re
 
 import requests
 from lxml import etree
+from requests.adapters import HTTPAdapter
 from requests.exceptions import ConnectionError
 
 import config
@@ -30,6 +31,7 @@ class NhentaiSpider:
 
         session = requests.Session()
         session.headers.update({"User-Agent": user_agent})
+        session.mount("https://", HTTPAdapter(max_retries=config.REQUESTS_MAX_RETRY))
         session.proxies.update(config.PROXY)
         session.cookies.update(cookies)
 

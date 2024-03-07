@@ -16,6 +16,8 @@ TELEGRAM_BOT_TOKEN = ""
 
 SENTRY_DSN = ""
 
+REQUESTS_MAX_RETRY = 5
+
 PROXY = {
     # 'http': 'socks5://127.0.0.1:1080',
     # 'https': 'socks5://127.0.0.1:1080'

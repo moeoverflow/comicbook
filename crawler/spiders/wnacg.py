@@ -3,6 +3,7 @@ import re
 import logging
 
 import requests
+from requests.adapters import HTTPAdapter
 from requests.exceptions import ConnectionError
 from lxml import etree
 
@@ -28,9 +29,18 @@ class WnacgSpider:
 
         session = requests.Session()
         session.headers.update({"User-Agent": ua.get_random_ua()})
+        session.mount(
+            "https://",
+            HTTPAdapter(
+                pool_connections=3,
+                pool_maxsize=3,
+                max_retries=config.REQUESTS_MAX_RETRY,
+            ),
+        )
         session.proxies.update(config.PROXY)
+
         try:
-            r = session.get(self.url)
+            r = session.get(self.url, timeout=10)
             selector = etree.HTML(r.text)
 
             title = selector.xpath('//*[@id="bodywrap"]/h2/text()')[0]

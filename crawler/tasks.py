@@ -112,6 +112,7 @@ def crawl_comic_manually(url, ftype, output):
         return f"ERR: unsupported format: {ftype}"
     tmp_dir = os.path.join(output, f"{_domain.value}@{_id}.tmp")
     dir = os.path.join(output, f"{_domain.value}@{_id}.{ftype}")
-    pipeline.generate(dir=tmp_dir)
+    if not pipeline.generate(dir=tmp_dir):
+        return f"ERR: generate failed: {_domain.value} {_id}"
     os.rename(tmp_dir, dir)
     return f"DONE: {_domain.value} {_id}"
