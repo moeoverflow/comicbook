@@ -3,6 +3,7 @@ import os
 import logging
 
 import requests
+from requests.adapters import HTTPAdapter
 from comicepub import ComicEpub
 
 from crawler.utils import ua
@@ -29,6 +30,7 @@ class ComicPipeline:
 
         session = requests.Session()
         session.headers.update({"User-Agent": ua.get_random_ua()})
+        session.mount("https://", HTTPAdapter(max_retries=config.REQUESTS_MAX_RETRY))
         session.proxies.update(config.PROXY)
 
         for (index, url) in enumerate(self.item.image_urls):
@@ -69,3 +71,5 @@ class ComicPipeline:
 
         if done_callback is not None:
             done_callback()
+
+        return True

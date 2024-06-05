@@ -4,6 +4,7 @@ import logging
 
 import requests
 from bs4 import BeautifulSoup
+from requests.adapters import HTTPAdapter
 from requests.exceptions import ConnectionError
 
 import config
@@ -39,6 +40,7 @@ class EhentaiSpider:
                 "authority": "e-hentai.org",
             }
         )
+        session.mount("https://", HTTPAdapter(max_retries=config.REQUESTS_MAX_RETRY))
         session.proxies.update(config.PROXY)
 
         try:

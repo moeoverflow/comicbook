@@ -4,6 +4,7 @@ import logging
 from zipfile import ZipFile
 
 import requests
+from requests.adapters import HTTPAdapter
 
 from crawler.utils import ua
 import config
@@ -26,6 +27,7 @@ class ComicPipeline:
 
         session = requests.Session()
         session.headers.update({"User-Agent": ua.get_random_ua()})
+        session.mount("https://", HTTPAdapter(max_retries=config.REQUESTS_MAX_RETRY))
         session.proxies.update(config.PROXY)
 
         for (index, url) in enumerate(self.item.image_urls):
@@ -42,3 +44,4 @@ class ComicPipeline:
         slog.info("cbzify...")
         self.cbz.close()
         slog.info("work done")
+        return True
