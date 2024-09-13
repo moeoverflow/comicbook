@@ -65,15 +65,14 @@ def crawl_comic(url):
 
     set_progress(_domain, _id, 0.01)
     pipeline = EPUBPipeline(item)
-    dir = storage.get_comic_file_downloading_path()
+    dl_path = storage.get_comic_file_downloading_path()
 
     def progress_callback(progress):
         set_progress(_domain, _id, progress)
 
     def done_callback():
-        dl_dir = storage.get_comic_file_downloading_path()
         dir = storage.get_comic_file_path()
-        os.rename(dl_dir, dir)
+        os.rename(dl_path, dir)
         filepath = os.path.join(_domain.value, storage.get_comic_file_name())
         comicbook_calibre.insert_one(
             {
@@ -86,7 +85,7 @@ def crawl_comic(url):
         delete_progress(_domain, _id)
 
     pipeline.generate(
-        dir=dir,
+        fname=dl_path,
         progress_callback=progress_callback,
         done_callback=done_callback,
     )
@@ -110,9 +109,9 @@ def crawl_comic_manually(url, ftype, output):
         pipeline = CBZPipeline(item)
     else:
         return f"ERR: unsupported format: {ftype}"
-    tmp_dir = os.path.join(output, f"{_domain.value}@{_id}.tmp")
-    dir = os.path.join(output, f"{_domain.value}@{_id}.{ftype}")
-    if not pipeline.generate(dir=tmp_dir):
+    tmp_fname = os.path.join(output, f"{_domain.value}@{_id}.tmp")
+    target = os.path.join(output, f"{_domain.value}@{_id}.{ftype}")
+    if not pipeline.generate(fname=tmp_fname):
         return f"ERR: generate failed: {_domain.value} {_id}"
-    os.rename(tmp_dir, dir)
+    os.rename(tmp_fname, target)
     return f"DONE: {_domain.value} {_id}"

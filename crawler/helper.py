@@ -1,6 +1,6 @@
 from .item import item_from_url
 from .utils.storage import Storage
-from .tasks import crawl_comic, crawl_comic_manually, get_progress
+from .tasks import crawl_comic, crawl_comic_manually, get_progress, set_progress
 
 
 class Crawler:
@@ -12,7 +12,11 @@ class Crawler:
         if item:
             result["item"] = item
         else:
-            result["data"] = {"code": 400, "status": "error", "message": "url is not support."}
+            result["data"] = {
+                "code": 400,
+                "status": "error",
+                "message": "url is not support.",
+            }
             return result
 
         storage = Storage(item.domain, item.id)
@@ -29,7 +33,11 @@ class Crawler:
         progress = get_progress(item.domain, item.id)
         if progress is not None:
             result["item"] = item
-            result["data"] = {"code": 202, "status": "generating", "progress": float(progress)}
+            result["data"] = {
+                "code": 202,
+                "status": "generating",
+                "progress": float(progress),
+            }
             return result
         else:
             result["data"] = {
@@ -51,6 +59,7 @@ class Crawler:
         result.clear()
         result["item"] = item
         crawl_comic.delay(url)
+        set_progress(item.domain, item.id, 0.00)
         result["data"] = {
             "code": 201,
             "status": "started",
