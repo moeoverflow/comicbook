@@ -19,8 +19,8 @@ class ComicPipeline:
         self.item = item
         self.epub = None
 
-    def generate(self, dir, progress_callback, done_callback=None):
-        self.epub = ComicEpub(dir)
+    def generate(self, fname, progress_callback, done_callback=None):
+        self.epub = ComicEpub(fname)
         slog = logger.getChild(f"{self.item.domain}-{self.item.id}")
 
         slog.info("start to download image resources")
@@ -33,7 +33,7 @@ class ComicPipeline:
         session.mount("https://", HTTPAdapter(max_retries=config.REQUESTS_MAX_RETRY))
         session.proxies.update(config.PROXY)
 
-        for (index, url) in enumerate(self.item.image_urls):
+        for index, url in enumerate(self.item.image_urls):
             r = session.get(url)
             if r.ok:
                 slog.info("[%d/%d] %s [OK]", index + 1, count, url)

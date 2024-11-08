@@ -10,20 +10,26 @@ class Storage:
         self.id = id
 
     def check_comic(self):
-        result = comicbook_calibre.find_one({"domain": self.domain.value, "id": self.id})
+        result = comicbook_calibre.find_one(
+            {
+                "domain": self.domain.value,
+                "id": self.id,
+            }
+        )
         if result is not None:
             return True
         else:
             return False
 
     def get_comic_file_name(self):
-        return "%s@%s.epub" % (self.domain.value, self.id)
+        return f"{self.domain.value}@{self.id}.epub"
 
     def get_comic_file_downloading_path(self):
-        return "%s/%s" % (config.COMIC_DOWNLOADING_PATHS[self.domain], self.get_comic_file_name())
+        suffix = os.urandom(16).hex()[0:8]
+        return f"{config.COMIC_DOWNLOADING_PATHS[self.domain]}/{self.get_comic_file_name()}.{suffix}"
 
     def get_comic_file_path(self):
-        return "%s/%s" % (config.COMIC_PATHS[self.domain], self.get_comic_file_name())
+        return f"{config.COMIC_PATHS[self.domain]}/{self.get_comic_file_name()}"
 
     def get_comic_public_download_url(self):
         return config.DOWNLOAD_URL[self.domain].format(params={"id": self.id})

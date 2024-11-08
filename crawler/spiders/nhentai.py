@@ -45,10 +45,14 @@ class NhentaiSpider:
             en_title = selector.xpath('//*[@id="info"]/h1/span[2]/text()')
             jp_title = selector.xpath('//*[@id="info"]/h2/span[2]/text()')
             item.titles = jp_title + en_title
-            item.author = selector.xpath('//*[@id="tags"]/div[4]/span[1]/a/span[1]/text()')
+            item.author = selector.xpath(
+                '//*[@id="tags"]/div[4]/span[1]/a/span[1]/text()'
+            )
 
             item.tags = selector.xpath('//*[@id="tags"]/div[3]/span/a/span[1]/text()')
-            item.language = selector.xpath('//*[@id="tags"]/div[6]/span/a/span[1]/text()')
+            item.language = selector.xpath(
+                '//*[@id="tags"]/div[6]/span/a/span[1]/text()'
+            )
             item.image_urls = selector.xpath(
                 '//*[@id="thumbnail-container"]/div/div/a/img/@data-src'
             )
@@ -61,7 +65,7 @@ class NhentaiSpider:
 
 
 def convert_url(url):
-    match_type = re.search(r"jpg|png|gif$", url)
+    match_type = re.search(r"jpg|png|gif|webp$", url)
     type = match_type.group()
     match_url = re.search(r"\.nhentai\.net/galleries/(\d+)/(\d+)", url)
     id = match_url.group(1)
