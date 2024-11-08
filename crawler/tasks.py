@@ -51,7 +51,11 @@ def crawl_comic(url):
     spider = SPIDERS[_domain](url)
 
     set_progress(_domain, _id, 0.00)
-    item = spider.crawl(item=item)
+    try:
+        item = spider.crawl(item=item)
+    except Exception as e:
+        delete_progress(_domain, _id)
+        return f"ERR: crawl failed: {_domain.value} {_id}: {e}"
     if item is None:
         delete_progress(_domain, _id)
         return f"ERR: crawl failed: {_domain.value} {_id}"
